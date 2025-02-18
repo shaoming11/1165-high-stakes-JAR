@@ -50,7 +50,7 @@ motor_group(LF, LM, LB),
 motor_group(RF, RM, RB),
 
 //Specify the PORT NUMBER of your inertial sensor, in PORT format (i.e. "PORT1", not simply "1"):
-PORT2,
+PORT13,
 
 //Input your wheel diameter. (4" omnis are actually closer to 4.125"):
 2.75,
@@ -181,7 +181,8 @@ void autonomous(void) {
   auto_started = true;
   switch(current_auton_selection){ 
     case 0:
-      awp_goal_r();
+      //turn_test();
+      grush_b();
       break;
     case 1:         
       drive_test();
@@ -222,9 +223,20 @@ void usercontrol(void) {
   bool toggleClamp = 1;
   bool toggleClaw = 1;
   bool toggleDoink = 1;
+  bool toggleColsort = 1;
   
   double targetPos = 0;
   bool lbActive = false;
+  double lbLoad = -105;
+  double lbScore = -230;
+  double lbDescore = -440;
+  wallL.setVelocity(80, pct);
+
+  // Calibrated hue values for red and blue (replace with your actual values)
+  int RED_HUE = 20;    // Replace with the actual hue value for red
+  int BLUE_HUE = 200; // Replace with the actual hue value for blue
+  int TOLERANCE = 20; // Tolerance for hue detection (adjust as needed)
+  int TARGET_HUE = BLUE_HUE;
   while (1) {
     // This is the main execution loop for the user control program.
     // Each time through the loop your program should update motor + servo
@@ -234,28 +246,157 @@ void usercontrol(void) {
     // Insert user code here. This is where you use the joystick values to
     // update your motors, etc.
     // ........................................................................
-    LF.setBrake(brake);
-    LM.setBrake(brake);
-    LB.setBrake(brake);
-    RF.setBrake(brake);
-    RM.setBrake(brake);
-    RB.setBrake(brake);
+    // LF.setBrake(brake);
+    // LM.setBrake(brake);
+    // LB.setBrake(brake);
+    // RF.setBrake(brake);
+    // RM.setBrake(brake);
+    // RB.setBrake(brake);
     wallL.setBrake(hold);
-    wallR.setBrake(hold);
+    //wallR.setBrake(hold);
+    /*
+    // // INTAKE
+    // if (Controller.ButtonR1.pressing()) {
+    //   intake.spin(fwd, 12, volt);
 
+    //   // COLOUR SORTING
+    //   // Turn on the sensor's LED for better detection
+    //   ColSort.setLight(ledState::on);
+
+    //   // Get the hue value of the detected color
+    //   int detectedHue = ColSort.hue();
+    //   if (detectedHue >= RED_HUE - TOLERANCE && detectedHue <= RED_HUE + TOLERANCE) {
+    //     // Action for red object (e.g., spin intake to collect)
+    //     task::sleep(50);
+    //     intake.stop();
+    //     task::sleep(50);
+    //   }
+    // }
+    
+    // if (Controller.ButtonR2.pressing()) {
+    //   intake.spin(directionType::rev, 12, volt);
+    // } else if (!Controller.ButtonR1.pressing() && !Controller.ButtonR2.pressing()) {
+    //   intake.spin(fwd, 0, volt);
+    // }
     // INTAKE
+    */
+
+    // SHAO --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    // if (Shao.ButtonA.pressing()) {
+    //   TARGET_HUE = toggleColsort ? BLUE_HUE : RED_HUE;
+    //   toggleColsort = toggleColsort * -1 + 1;
+    //   while (Shao.ButtonA.pressing()) {
+    //     task::sleep(10);
+    //   }
+    // }
+    
+    if (Shao.ButtonR1.pressing()) {
+      intake.spin(fwd, 12, volt);
+
+      // // COLOUR SORTING
+      // // Turn on the sensor's LED for better detection
+      // ColSort.setLight(ledState::on);
+
+      // // Get the hue value of the detected color
+      // int detectedHue = ColSort.hue();
+      // if (detectedHue >= TARGET_HUE - TOLERANCE && detectedHue <= TARGET_HUE + TOLERANCE) {
+      //   // Action for red object (e.g., spin intake to collect)
+      //   task::sleep(50);
+      //   intake.stop();
+      //   task::sleep(50);
+      // }
+    }
+    
+    if (Shao.ButtonR2.pressing()) {
+      intake.spin(directionType::rev, 12, volt);
+    }
+
+    // TOGGLE COLOURSORT
+
+    // SHAO LADYBROWN -------------------------------------------------------------------------------------
+    if (Shao.ButtonL1.pressing()) {
+      lbActive = false;
+      wallL.spin(directionType::rev, 12, volt);
+      wallR.spin(directionType::rev, 12, volt);
+    } else if (Shao.ButtonL2.pressing()) {
+      lbActive = false;
+      wallL.spin(directionType::fwd, 12, volt);
+      wallR.spin(directionType::fwd, 12, volt);
+    }
+
+    // LOAD LB
+    if (Shao.ButtonLeft.pressing()) {
+      lbActive = true;
+      targetPos = lbLoad;
+      wallL.spinTo(targetPos, deg, false);  // Non-blocking call
+      wallR.spinTo(targetPos, deg, false);
+    }
+
+    // SCORING LB
+    if (Shao.ButtonUp.pressing()) {
+      lbActive = true;
+      targetPos = lbScore;
+      wallL.spinTo(targetPos, deg, false);  // Non-blocking call
+      wallR.spinTo(targetPos, deg, false);
+    }
+
+    // DESCORE LB
+    if (Shao.ButtonX.pressing()) {
+      lbActive = true;
+      targetPos = lbDescore;
+      wallL.spinTo(targetPos, deg, false);  // Non-blocking call
+      wallR.spinTo(targetPos, deg, false);
+    }
+
+    if (Shao.ButtonDown.pressing()) {
+      lbActive = false;
+      wallL.resetPosition();
+      wallR.resetPosition();
+    }
+
+
+    // MAIN CONTROLLER -------------------------------------------------------------------------------------
+
     if (Controller.ButtonR1.pressing()) {
-      intakeL.spin(directionType::fwd, 12, volt);
-      intakeR.spin(directionType::fwd, 12, volt);
+      intake.spin(fwd, 12, volt);
+
+      // // COLOUR SORTING
+      // // Turn on the sensor's LED for better detection
+      // ColSort.setLight(ledState::on);
+
+      // // Get the hue value of the detected color
+      // int detectedHue = ColSort.hue();
+      // if (detectedHue >= RED_HUE - TOLERANCE && detectedHue <= RED_HUE + TOLERANCE) {
+      //   // Action for red object (e.g., spin intake to collect)
+      //   task::sleep(50);
+      //   intake.stop();
+      //   task::sleep(50);
+      // }
     }
     
     if (Controller.ButtonR2.pressing()) {
-      intakeL.spin(directionType::rev, 12, volt);
-      intakeR.spin(directionType::rev, 12, volt);      
-    } else if (!Controller.ButtonR1.pressing() && !Controller.ButtonR2.pressing()) {
-      intakeL.spin(directionType::fwd, 0, volt);
-      intakeR.spin(directionType::rev, 0, volt);
+      intake.spin(directionType::rev, 12, volt);
     }
+    
+    if ((!Shao.ButtonR1.pressing() && !Shao.ButtonR2.pressing()) && (!Controller.ButtonR1.pressing() && !Controller.ButtonR2.pressing())) {
+      intake.spin(fwd, 0, volt);
+    }
+
+    // LADY BROWN --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+    // if (Controller.ButtonL1.pressing()) {
+    //   lbActive = false;
+    //   wallL.spin(directionType::rev, 12, volt);
+    //   wallR.spin(directionType::rev, 12, volt);
+    // } else if (Controller.ButtonL2.pressing()) {
+    //   lbActive = false;
+    //   wallL.spin(directionType::fwd, 12, volt);
+    //   wallR.spin(directionType::fwd, 12, volt);
+    // } else if (!lbActive){
+    //   // Stop the motors when no button is pressed
+    //   wallL.stop();
+    //   wallR.stop();
+    // }
 
     if (Controller.ButtonL1.pressing()) {
       lbActive = false;
@@ -265,16 +406,32 @@ void usercontrol(void) {
       lbActive = false;
       wallL.spin(directionType::fwd, 12, volt);
       wallR.spin(directionType::fwd, 12, volt);
-    } else if (!lbActive){
+    } 
+    
+    if (!Controller.ButtonL1.pressing() && !Controller.ButtonL2.pressing() && !Shao.ButtonL1.pressing() && !Shao.ButtonL2.pressing() && !lbActive){
       // Stop the motors when no button is pressed
       wallL.stop();
       wallR.stop();
     }
 
-    // LADY BROWN MECH
+    // LOAD LB
     if (Controller.ButtonDown.pressing()) {
       lbActive = true;
-      targetPos = -130;
+      targetPos = lbLoad;
+      wallL.spinTo(targetPos, deg, false);  // Non-blocking call
+      wallR.spinTo(targetPos, deg, false);
+    }
+
+    if (Controller.ButtonLeft.pressing()) {
+      lbActive = true;
+      targetPos = lbScore;
+      wallL.spinTo(targetPos, deg, false);  // Non-blocking call
+      wallR.spinTo(targetPos, deg, false);
+    }
+
+    if (Controller.ButtonRight.pressing()) {
+      lbActive = true;
+      targetPos = lbDescore;
       wallL.spinTo(targetPos, deg, false);  // Non-blocking call
       wallR.spinTo(targetPos, deg, false);
     }
@@ -285,6 +442,7 @@ void usercontrol(void) {
       wallR.resetPosition();
     }
 
+    // PNEUMATICS -------------------------------------------------------------------------------------
 
     // CLAMP
     if (Controller.ButtonB.pressing()) {
@@ -305,13 +463,13 @@ void usercontrol(void) {
     } 
 
     // CLAW
-    if (Controller.ButtonA.pressing()) {
-      Claw.set(toggleClaw);
-      toggleClaw = toggleClaw * -1 + 1;
-      while (Controller.ButtonA.pressing()) {
-        task::sleep(10);
-      }
-    } 
+    // if (Controller.ButtonA.pressing()) {
+    //   Claw.set(toggleClaw);
+    //   toggleClaw = toggleClaw * -1 + 1;
+    //   while (Controller.ButtonA.pressing()) {
+    //     task::sleep(10);
+    //   }
+    // } 
 
     //Replace this line with chassis.control_tank(); for tank drive 
     //or chassis.control_holonomic(); for holo drive.
