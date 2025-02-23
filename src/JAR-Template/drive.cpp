@@ -317,99 +317,15 @@ void Drive::drive_distance(float distance, float heading, float drive_max_voltag
     float drive_error = distance+start_average_position-average_position;
     float heading_error = reduce_negative_180_to_180(heading - get_absolute_heading());
     float drive_output = drivePID.compute(drive_error);
-    float heading_output = headingPID.compute(heading_error);
+    float heading_output = 0;//headingPID.compute(heading_error);
 
     drive_output = clamp(drive_output, -drive_max_voltage, drive_max_voltage);
     heading_output = clamp(heading_output, -heading_max_voltage, heading_max_voltage);
 
     drive_with_voltage(drive_output+heading_output, drive_output-heading_output);
+
     task::sleep(10);
-  }// 1. test pid. 2. try other code again
-  // Calculate the starting position and target position based on distance
-  // __________________________________ NEW SECTION _______________________
-  // float start_position = (get_left_position_in() + get_right_position_in()) / 2.0;
-  // float target_position = start_position + distance;  // Positive for forward, negative for backward
-
-  // // Define constant motor voltage (adjust as needed)
-  // float constant_drive_voltage = drive_max_voltage * (distance > 0 ? 1 : -1);  // Set direction based on distance sign
-
-  // while (true) {
-  //     // Calculate the current position and the distance remaining
-  //     float current_position = (get_left_position_in() + get_right_position_in()) / 2.0;
-  //     float distance_remaining = fabs(target_position - current_position);
-
-  //     // Stop if within a small threshold (e.g., 0.5 inches)
-  //     if (distance_remaining <= 0.5) {  // Tolerance for stopping
-  //         break;
-  //     }
-
-  //     // Drive with a fixed voltage for constant speed in the correct direction
-  //     drive_with_voltage(constant_drive_voltage, constant_drive_voltage);
-
-  //     vex::this_thread::sleep_for(10);  // Small delay to avoid excessive CPU use
-  // }
-
-  // // Stop the motors once the target distance is reached
-  // drive_stop(brake);
-
-  // --------------NEW SECTION ----------
-  // float start_average_position = (get_left_position_in() + get_right_position_in()) / 2.0;
-  // float average_position = start_average_position;
-  // float target_position = start_average_position + fabs(distance);  // Calculate the target position
-
-  // // Define constant motor voltage (adjust this as needed)
-  // float constant_drive_voltage = 10.0 * (distance/fabs(distance));  // Voltage out of 12 for driving at constant speed
-
-  // while (fabs(average_position) < fabs(target_position)) {
-  //     average_position = (get_left_position_in() + get_right_position_in()) / 2.0;
-      
-  //     // Drive with a fixed voltage for constant speed
-  //     drive_with_voltage(constant_drive_voltage, constant_drive_voltage);
-      
-  //     task::sleep(10);  // Small delay to prevent excessive CPU use
-  // }
-
-  // // Stop the motors once the target distance is reached
-  // drive_stop(brake);
-  // _-----------__NEW SECTION ____________________
-  // float start_position = (get_left_position_in() + get_right_position_in()) / 2.0;
-  // float target_position = start_position + distance;
-  // float current_position;
-  // float distance_threshold = distance * 0.01;  // 1% of total distance
-
-  // // Phase 1: Constant Voltage Drive
-  // float constant_voltage = 10.0;  // Set your desired constant voltage (adjust as needed)
-
-  // while (true) {
-  //     // Calculate the current position and distance remaining
-  //     current_position = (get_left_position_in() + get_right_position_in()) / 2.0;
-  //     float distance_remaining = fabs(target_position - current_position);
-
-  //     // Check if we are close enough to the target to switch to PID
-  //     if (distance_remaining <= distance_threshold) {
-  //         break;  // Exit the constant voltage phase
-  //     }
-
-  //     // Apply constant voltage for 99% of the distance
-  //     drive_with_voltage(constant_voltage, constant_voltage);
-
-  //     vex::this_thread::sleep_for(10);
-  // }
-
-  // // Phase 2: PID Control for Final Approach
-  // PID drivePID(distance_remaining, 1.0, 0.0, 0.5);  // Adjust Kp, Ki, and Kd for fine-tuning
-
-  // while (!drivePID.is_settled()) {
-  //     // Calculate the PID output for fine-tuning
-  //     float drive_output = drivePID.compute(fabs(target_position - current_position));
-  //     drive_output = clamp(drive_output, -6.0, 6.0);  // Limit output for precise control
-
-  //     // Apply PID output
-  //     drive_with_voltage(drive_output, drive_output);
-  //     vex::this_thread::sleep_for(10);
-  // }
-
-  // drive_stop(brake);  // Stop motors at the end of the movement
+  }
 }
 
 void Drive::drive_side_distance(float distance, float drive_max_voltage, float left_kp, float left_ki, float left_kd, float left_starti, float right_kp, float right_ki, float right_kd, float right_starti) {
@@ -429,8 +345,6 @@ void Drive::drive_side_distance(float distance, float heading, float drive_max_v
   // Current positions
   float left_position = start_left_position;
   float right_position = start_right_position;
-  //Claw.set(true);  // Extend the piston
-  Doink.set(true);
 
   while (!leftDrivePID.is_settled() || !rightDrivePID.is_settled()) {
     // Update current positions
@@ -453,12 +367,6 @@ void Drive::drive_side_distance(float distance, float heading, float drive_max_v
 
     // Apply voltages to the motors
     drive_with_voltage(left_output, right_output);
-
-    // ONLY FOR GOAL RUSH
-    if (fabs(right_error) < (distance / 4)) {
-      //Claw.set(false);  // Extend the piston
-      //Doink.set(false);
-    }
 
     task::sleep(10);
   }

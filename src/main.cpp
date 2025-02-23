@@ -181,8 +181,8 @@ void autonomous(void) {
   auto_started = true;
   switch(current_auton_selection){ 
     case 0:
-      //turn_test();
-      grush_b();
+      //turn_test(); 
+      awp_solo_b();
       break;
     case 1:         
       drive_test();
