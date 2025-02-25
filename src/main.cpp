@@ -182,7 +182,8 @@ void autonomous(void) {
   switch(current_auton_selection){ 
     case 0:
       //turn_test(); 
-      awp_solo_b();
+      //awp_ring_b();
+      grush_r();
       break;
     case 1:         
       drive_test();
@@ -227,7 +228,7 @@ void usercontrol(void) {
   
   double targetPos = 0;
   bool lbActive = false;
-  double lbLoad = -105;
+  double lbLoad = -110;
   double lbScore = -230;
   double lbDescore = -440;
   wallL.setVelocity(80, pct);
