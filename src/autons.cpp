@@ -58,7 +58,7 @@ void intakecontrol() {
   int RED_HUE = 20;    // Replace with the actual hue value for red
   int BLUE_HUE = 180; // Replace with the actual hue value for blue
   int TOLERANCE = 20; // Tolerance for hue detection (adjust as needed)
-  int TARGET_HUE = RED_HUE;
+  int TARGET_HUE = BLUE_HUE;
   double currentPos = hIntake.position(deg);
   double prevPos = currentPos;
   double timeJam = 0;
@@ -501,50 +501,57 @@ void grush_r() {
   Doink.set(1);
 
   fIntake.spin(fwd, 12, volt);
-  hIntake.spin(fwd, 12, volt);
-  chassis.drive_distance(5.2, chassis.get_absolute_heading(), 12, 12, 1.5, 200, 5000, 4, 0, 50, 0, 0, 0, 0, 0);
+  hIntake.spin(fwd, 6, volt);
+  chassis.drive_distance(4.2, chassis.get_absolute_heading(), 12, 12, 1.5, 200, 5000, 4, 0, 50, 0, 0, 0, 0, 0);
+  task::sleep(10);
   hIntake.stop();
   Doink.set(0); // grab mogo 
-  chassis.drive_distance(-4, chassis.get_absolute_heading(), 12, 12, 1.5, 200, 5000, 4, 0, 50, 0, 0, 0, 0, 0);
+  chassis.drive_distance(-3.8, chassis.get_absolute_heading(), 12, 12, 1.5, 200, 5000, 4, 0, 50, 0, 0, 0, 0, 0);
   fIntake.stop();
+  chassis.set_drive_constants(10, 10, 0, 40, 0); // first val can be 10 or 12
   Doink.set(1);
   task::sleep(30);
   chassis.drive_distance(1.5);
-  chassis.set_drive_constants(10, 20, 0, 20, 0); // first val can be 10 or 12
   chassis.drive_distance(-1.5, chassis.get_absolute_heading(), 6, 6, 1.5, 200, 1000);
-  chassis.set_drive_constants(8, 10, 0, 40, 0); // first val can be 10 or 12
   Doink.set(0);
   task::sleep(100);
-  chassis.turn_to_angle(187);
-  chassis.drive_distance(-5.5);
+  chassis.turn_to_angle(195);
+  chassis.set_drive_constants(4, 10, 0, 40, 0); // first val can be 10 or 12
+  chassis.drive_distance(-3.4, chassis.get_absolute_heading(), 6, 0);
+  chassis.set_drive_constants(8, 10, 0, 40, 0); // first val can be 10 or 12
   Clamp.set(1);
+  task::sleep(200);
+  chassis.turn_to_angle(220);
   task::sleep(100);
-  intake.spin(fwd, 12, volt);
-  chassis.drive_distance(3.5);
+  thread intake1(intakecontrol);
+  //hIntake.spin(fwd, 12, volt);
+  task::sleep(500);
+  intake1.interrupt();
+  intake.stop();
+  //hIntake.stop();
+  chassis.drive_distance(4.6);
+  chassis.turn_to_angle(-230);
+  Doink.set(1);
+  task::sleep(10);
+  chassis.drive_distance(3.7);
+  chassis.turn_to_angle(-320);
+  Doink.set(0);
   chassis.turn_to_angle(0);
-  task::sleep(100);
+  chassis.drive_distance(2.5);
   Clamp.set(0);
   task::sleep(100);
-  chassis.drive_distance(2.3);
-  chassis.turn_to_angle(100);
-  chassis.set_drive_constants(5, 10, 0, 40, 0); // first val can be 10 or 12
-  chassis.drive_distance(-3.5);
-  Clamp.set(1);
+  chassis.turn_to_angle(20);
+  chassis.drive_distance(1, chassis.get_absolute_heading(), 8, 0, 0.05, 200, 750);
+  chassis.turn_to_angle(110, 6);
   chassis.set_drive_constants(8, 10, 0, 40, 0); // first val can be 10 or 12
-  chassis.turn_to_angle(-7);
-  intake.spin(fwd, 12, volt);
-  chassis.drive_distance(1.8);
-  Doink.set(1);
-  hIntake.stop();
-  chassis.drive_distance(-4.5);
-  Doink.set(0);
-  chassis.turn_to_angle(-2);
-  intake.spin(fwd, 12, volt);
-  chassis.drive_distance(1);
-  chassis.turn_to_angle(-80);
-  chassis.drive_distance(-3.5);
-
-
+  chassis.drive_distance(-2.5);
+  chassis.set_drive_constants(12, 10, 0, 40, 0); // first val can be 10 or 12
+  Clamp.set(1);
+  thread intake2(intakecontrol);
+  // fIntake.spin(fwd, 12, volt);
+  // hIntake.spin(fwd, 12, volt);
+  chassis.drive_distance(2.5);
+  intake2.interrupt();
 }
 
 void grush_r2() {
@@ -575,79 +582,61 @@ void grush_b() {
   Doink.set(1);
   fIntake.spin(fwd, 12, volt);
   hIntake.spin(fwd, 5, volt);
-  chassis.drive_distance(6, chassis.get_absolute_heading(), 12, 12, 1.5, 200, 5000, 4, 0, 50, 0, 0, 0, 0, 0);
+  chassis.drive_distance(4.2, chassis.get_absolute_heading(), 12, 12, 1.5, 200, 5000, 4, 0, 50, 0, 0, 0, 0, 0);
+  task::sleep(60);
   hIntake.stop();
-  Doink.set(0); // grab mogo
-  task::sleep(10);  
-  chassis.drive_distance(-3.5, chassis.get_absolute_heading(), 12, 12, 1.5, 200, 5000, 4, 0, 50, 0, 0, 0, 0, 0);
+  Doink.set(0); // grab mogo 
+  chassis.drive_distance(-3, chassis.get_absolute_heading(), 12, 12, 1.5, 200, 5000, 4, 0, 50, 0, 0, 0, 0, 0);
   fIntake.stop();
-
-  intake.spin(fwd, 12, volt);
-  task::sleep(200);                                                                                                                  
-  
- 
-  intake.stop();
-
   Doink.set(1);
-  task::sleep(10);
-  chassis.drive_distance(1);
-  chassis.drive_distance(-1.5);
+  task::sleep(30);
+  chassis.drive_distance(1.5);
+  chassis.set_drive_constants(10, 20, 0, 20, 0); // first val can be 10 or 12
+  chassis.drive_distance(-1.5, chassis.get_absolute_heading(), 6, 6, 1.5, 200, 1000);
+  chassis.set_drive_constants(8, 10, 0, 40, 0); // first val can be 10 or 12
   Doink.set(0);
-  
-  // CLAMP FIRST MOGO
-  // chassis.turn_to_angle(190, 8, 2.0, 300, 1000); // face mogo 1 for clamp
-  // chassis.drive_distance(-5.3);
-  // Clamp.set(1); // CLAMP FIRST MOGO
-  // task::sleep(700);
-  // intake.spin(fwd, 12, volt);
-  // task::sleep(500);
-  // intake.stop();
-  // chassis.drive_distance(2);
-  // chassis.turn_to_angle(90, 8, 2.0, 300, 1000);
-  // Clamp.set(0);
-
-/*
-  chassis.set_turn_constants(8, .4, 0, 2.5, 0); // 0.009, 15
-  chassis.set_swing_constants(12, .3, 0, 2, 15);
-
-  // Each exit condition set is in the form of (settle_error, settle_time, timeout).
-  chassis.set_drive_exit_conditions(1.5, 200, 5000);
-  chassis.set_turn_exit_conditions(2.0, 300, 3000);
-*/
-
-  chassis.turn_to_angle(-127, 8, 2.0, 300, 2000);
-  chassis.drive_distance(-3.5);
-  task::sleep(200);  
-  Clamp.set(1); // CLAMP MIDDLE MOGO
-  task::sleep(500);  
-  intake.spin(fwd, 12, volt);
-  task::sleep(700);
-
-  chassis.turn_to_angle(-120, 8, 2.0, 300, 1000); // INITIALL 105  --------
-  // TURN ON COLOUR SORTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
-  Doink.set(true); // go to corner
+  task::sleep(100);
+  chassis.turn_to_angle(192);
+  chassis.drive_distance(-4, chassis.get_absolute_heading(), 6, 0, 0.5, 200, 2000);
+  Clamp.set(1);
+  thread intake1(intakecontrol);
+  //hIntake.spin(fwd, 12, volt);
+  task::sleep(400);
+  intake1.interrupt();
   intake.stop();
-  chassis.drive_distance(9);
-  chassis.turn_to_angle(180, 8, 2.0, 300, 1000);
-  chassis.turn_to_angle(75);
-  Clamp.set(false);
-  Doink.set(false);
-  chassis.drive_distance(8);
-
-  // intake.spin(directionType::rev, 12, volt);
-  // task::sleep(700);
-  // intake.spin(fwd, 12, volt);
-  // task::sleep(700);
-  // intake.spin(directionType::rev, 12, volt);
-  // task::sleep(700);
-  // intake.spin(fwd, 12, volt);
-  // task::sleep(700);
-  // intake.spin(directionType::rev, 12, volt);
-  // task::sleep(700);
-  // intake.spin(fwd, 12, volt);
-  // task::sleep(700);
-
+  chassis.turn_to_angle(-120);
+  chassis.drive_distance(2.5);
+  chassis.turn_to_angle(-155);
+  Doink.set(1);
+  chassis.drive_distance(1.9, chassis.get_absolute_heading(), 8, 0, 0.05, 200, 1000);
+  chassis.turn_to_angle(-250, 10, 2.0, 300, 1000);
+  //chassis.drive_distance(1);
+  chassis.turn_to_angle(-350, 6);
+  task::sleep(100);
+  Doink.set(0);
+  chassis.turn_to_angle(45);
+  chassis.drive_distance(1.5, chassis.get_absolute_heading(), 8, 0, 0.5, 200, 2000);
+  Clamp.set(0);
+  chassis.drive_distance(1.5, chassis.get_absolute_heading(), 8, 0, 0.5, 200, 2000);
+  chassis.turn_to_angle(-60);
+  chassis.drive_distance(-3, chassis.get_absolute_heading(), 8, 0, 0.5, 200, 2000);
+  Clamp.set(1);
+  task::sleep(250);
+  intake.spin(fwd, 12, volt);
+  chassis.drive_distance(3);
   
+  // chassis.turn_to_angle(-120, 6);
+  // chassis.set_drive_constants(5, 10, 0, 40, 0); // first val can be 10 or 12
+  // chassis.drive_distance(-2);
+  // chassis.turn_to_angle(60, 6);
+  // Clamp.set(0);
+  // chassis.turn_to_angle(-120, 6);
+  // chassis.drive_distance(-3);
+  // Clamp.set(1);
+  // chassis.turn_to_angle(-90, 6);
+  // fIntake.spin(fwd, 12, volt);
+  // hIntake.spin(fwd, 12, volt);
+  // chassis.drive_distance(3);
 }
 
 void gdisrupt_r() {
@@ -772,9 +761,9 @@ void awp_solo_b() {
   chassis.turn_to_angle(200, 10, 2, 300, 1000, 0.35, 0.03, 3.4, 15);
   // spin intake
   thread intake1(intakecontrol);
-  chassis.drive_distance(1.5, chassis.get_absolute_heading(), 6, 0, .5, 200, 5000); // 1st stack
+  chassis.drive_distance(1.2, chassis.get_absolute_heading(), 6, 0, .5, 200, 5000); // 1st stack
   task::sleep(100);
-  chassis.drive_distance(-2.7); // 1.8, -3
+  chassis.drive_distance(-2.2); // 1.8, -3
   chassis.turn_to_angle(245);
   chassis.drive_distance(2); // second stack
   task::sleep(250);
@@ -787,7 +776,7 @@ void awp_solo_b() {
 
   chassis.turn_to_angle(60);
   thread intake2(intakecontrol);
-  chassis.drive_distance(9.5, chassis.get_absolute_heading(), 6, 0, 0.5, 200, 5000);
+  chassis.drive_distance(7.2, chassis.get_absolute_heading(), 6, 0, 0.5, 200, 5000);
   intake2.interrupt();
   intake.stop();
   task::sleep(200);
@@ -795,11 +784,11 @@ void awp_solo_b() {
   //chassis.drive_distance(1, chassis.get_absolute_heading(), 6, 0, 0.05, 200, 5000);
 
   chassis.turn_to_angle(0, 8, 2, 300, 3000, 0.3, 0.03, 4, 15); // FACE SECOND MOGO
-  chassis.drive_distance(-3.8, chassis.get_absolute_heading(), 6, 0, 0.05, 300, 1100);
+  chassis.drive_distance(-4.1, chassis.get_absolute_heading(), 6, 0, 0.05, 300, 1100);
   Clamp.set(1);
   task::sleep(250);
 
-  chassis.turn_to_angle(50);
+  chassis.turn_to_angle(45);
   intake.spin(fwd, 12, volt);
   chassis.drive_distance(3);
   task::sleep(300);
@@ -868,9 +857,9 @@ void awp_solo_r() {
   chassis.turn_to_angle(-200, 10, 2, 300, 1000, 0.4, 0.03, 3.2, 15);
   // spin intake
   thread intake1(intakecontrol);
-  chassis.drive_distance(1.5, chassis.get_absolute_heading(), 6, 0, .5, 200, 5000); // 1st stack
+  chassis.drive_distance(1.2, chassis.get_absolute_heading(), 6, 0, .5, 200, 2000); // 1st stack
   task::sleep(100);
-  chassis.drive_distance(-2.7);
+  chassis.drive_distance(-2.2);
   chassis.turn_to_angle(-245);
   chassis.drive_distance(2); // second stack
   task::sleep(250);
@@ -891,11 +880,11 @@ void awp_solo_r() {
   //chassis.drive_distance(1, chassis.get_absolute_heading(), 6, 0, 0.05, 200, 5000);
 
   chassis.turn_to_angle(0, 8, 2, 300, 3000, 0.3, 0.03, 4, 15); // FACE SECOND MOGO
-  chassis.drive_distance(-3.8, chassis.get_absolute_heading(), 6, 0, 0.05, 300, 1100);
+  chassis.drive_distance(-4.1, chassis.get_absolute_heading(), 6, 0, 0.05, 300, 1100);
   Clamp.set(1);
   task::sleep(250);
 
-  chassis.turn_to_angle(-50);
+  chassis.turn_to_angle(-45);
   intake.spin(fwd, 12, volt);
   chassis.drive_distance(3);
   task::sleep(300);
@@ -953,16 +942,23 @@ void awp_ring_r() {
   //task::sleep(250);
 
   //chassis.set_turn_exit_conditions(0.5, 300, 3000);
-  chassis.turn_to_angle(-200, 10, 2, 300, 1000, 0.4, 0.03, 3, 15);
+  chassis.turn_to_angle(-200, 10, 2, 300, 1000, 0.35, 0.03, 3.4, 15);
   // spin intake
   thread intake1(intakecontrol);
-  chassis.drive_distance(2, chassis.get_absolute_heading(), 6, 0, .5, 200, 5000); // 1st stack
+  chassis.drive_distance(1.2, chassis.get_absolute_heading(), 6, 0, .05, 200, 2000, 10, 0, 5, 0, 0, 0, 0, 0); // 1st stack
   task::sleep(100);
-  chassis.drive_distance(-3);
+  chassis.drive_distance(-1.9, chassis.get_absolute_heading(), 6, 0, .5, 200, 2000);
   chassis.turn_to_angle(-245);
-  chassis.drive_distance(2); // second stack
+  chassis.drive_distance(2.4, chassis.get_absolute_heading(), 6, 0, .05, 200, 5000); // second stack
+  task::sleep(350);
+  chassis.turn_to_angle(-160);
+  chassis.drive_distance(1.5, chassis.get_absolute_heading(), 6, 0, .05, 200, 5000);
   task::sleep(250);
-  chassis.turn_to_angle(-190);
+  chassis.drive_distance(-2.3, chassis.get_absolute_heading(), 6, 0, .05, 200, 5000);
+  chassis.turn_to_angle(90);
+  chassis.drive_distance(-5);
+  intake.stop();
+  intake1.interrupt();
   // go to ladder?
 }
 
@@ -990,18 +986,18 @@ void awp_ring_b() {
   chassis.turn_to_angle(200, 10, 2, 300, 1000, 0.35, 0.03, 3.4, 15);
   // spin intake
   thread intake1(intakecontrol);
-  chassis.drive_distance(1.2, chassis.get_absolute_heading(), 6, 0, .05, 200, 5000); // 1st stack
+  chassis.drive_distance(1.2, chassis.get_absolute_heading(), 6, 0, .05, 200, 5000, 10, 0, 5, 0, 0, 0, 0, 0); // 1st stack
   task::sleep(100);
-  chassis.drive_distance(-1.8, chassis.get_absolute_heading(), 6, 0, .5, 200, 5000);
+  chassis.drive_distance(-1.9, chassis.get_absolute_heading(), 6, 0, .5, 200, 5000);
   chassis.turn_to_angle(245);
   chassis.drive_distance(2.8, chassis.get_absolute_heading(), 6, 0, .05, 200, 5000); // second stack
   task::sleep(350);
-  chassis.turn_to_angle(150);
-  chassis.drive_distance(1, chassis.get_absolute_heading(), 6, 0, .05, 200, 5000);
+  chassis.turn_to_angle(160);
+  chassis.drive_distance(1.3, chassis.get_absolute_heading(), 6, 0, .05, 200, 5000);
   task::sleep(250);
-  chassis.drive_distance(-1.3, chassis.get_absolute_heading(), 6, 0, .05, 200, 5000);
-  chassis.turn_to_angle(250);
-  chassis.drive_distance(-5);
+  chassis.drive_distance(-1.8, chassis.get_absolute_heading(), 6, 0, .05, 200, 5000);
+  chassis.turn_to_angle(265);
+  chassis.drive_distance(-6, chassis.get_absolute_heading(), 6, 0, .5, 200, 5000);
   intake.stop();
   intake1.interrupt();
   // go to ladder?
@@ -1021,7 +1017,8 @@ void drive_test(){
 void turn_test(){
   // // chassis.turn_to_angle(0);
   Clamp.set(1);
-  chassis.turn_to_angle(-200, 10, 2, 300, 1000, 0.4, 0.03, 3.4, 15);
+  task::sleep(500);
+  chassis.turn_to_angle(-95, 5, 2.0, 300, 2000, 2, 0, 6, 0);
   // chassis.turn_to_angle(210);
   // chassis.turn_to_angle(180);
   // chassis.turn_to_angle(270);

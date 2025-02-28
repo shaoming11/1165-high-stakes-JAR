@@ -133,7 +133,6 @@ void pre_auton() {
     Brain.Screen.printAt(5, 80, "Chassis Heading Reading:");
     Brain.Screen.printAt(5, 100, "%f", chassis.get_absolute_heading());
     Brain.Screen.printAt(5, 120, "Selected Auton:");
-    Brain.Screen.printAt(5, 20, "WallL %.2f degrees", Wall.position(deg));
     switch(current_auton_selection){
       case 0:
         Brain.Screen.printAt(5, 140, "Auton 1");
@@ -182,8 +181,7 @@ void autonomous(void) {
   switch(current_auton_selection){ 
     case 0:
       //turn_test(); 
-      //awp_ring_b();
-      grush_r();
+      awp_solo_r();
       break;
     case 1:         
       drive_test();
@@ -224,7 +222,7 @@ void usercontrol(void) {
   bool toggleClamp = 1;
   bool toggleClaw = 1;
   bool toggleDoink = 1;
-  bool toggleColsort = 1;
+  bool toggleColsort = 1; // sort red is 0, sort blue is 1
   
   double targetPos = 0;
   bool lbActive = false;
@@ -236,7 +234,7 @@ void usercontrol(void) {
   // Calibrated hue values for red and blue (replace with your actual values)
   int RED_HUE = 20;    // Replace with the actual hue value for red
   int BLUE_HUE = 200; // Replace with the actual hue value for blue
-  int TOLERANCE = 20; // Tolerance for hue detection (adjust as needed)
+  int TOLERANCE = 50; // Tolerance for hue detection (adjust as needed)
   int TARGET_HUE = BLUE_HUE;
   while (1) {
     // This is the main execution loop for the user control program.
@@ -256,32 +254,6 @@ void usercontrol(void) {
     wallL.setBrake(hold);
     //wallR.setBrake(hold);
     /*
-    // // INTAKE
-    // if (Controller.ButtonR1.pressing()) {
-    //   intake.spin(fwd, 12, volt);
-
-    //   // COLOUR SORTING
-    //   // Turn on the sensor's LED for better detection
-    //   ColSort.setLight(ledState::on);
-
-    //   // Get the hue value of the detected color
-    //   int detectedHue = ColSort.hue();
-    //   if (detectedHue >= RED_HUE - TOLERANCE && detectedHue <= RED_HUE + TOLERANCE) {
-    //     // Action for red object (e.g., spin intake to collect)
-    //     task::sleep(50);
-    //     intake.stop();
-    //     task::sleep(50);
-    //   }
-    // }
-    
-    // if (Controller.ButtonR2.pressing()) {
-    //   intake.spin(directionType::rev, 12, volt);
-    // } else if (!Controller.ButtonR1.pressing() && !Controller.ButtonR2.pressing()) {
-    //   intake.spin(fwd, 0, volt);
-    // }
-    // INTAKE
-    */
-
     // SHAO --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     // if (Shao.ButtonA.pressing()) {
     //   TARGET_HUE = toggleColsort ? BLUE_HUE : RED_HUE;
@@ -311,8 +283,6 @@ void usercontrol(void) {
     if (Shao.ButtonR2.pressing()) {
       intake.spin(directionType::rev, 12, volt);
     }
-
-    // TOGGLE COLOURSORT
 
     // SHAO LADYBROWN -------------------------------------------------------------------------------------
     if (Shao.ButtonL1.pressing()) {
@@ -354,20 +324,34 @@ void usercontrol(void) {
       wallL.resetPosition();
       wallR.resetPosition();
     }
+    */
 
 
     // MAIN CONTROLLER -------------------------------------------------------------------------------------
-
     if (Controller.ButtonR1.pressing()) {
       intake.spin(fwd, 12, volt);
 
-      // // COLOUR SORTING
       // // Turn on the sensor's LED for better detection
       // ColSort.setLight(ledState::on);
 
       // // Get the hue value of the detected color
       // int detectedHue = ColSort.hue();
-      // if (detectedHue >= RED_HUE - TOLERANCE && detectedHue <= RED_HUE + TOLERANCE) {
+
+      // // COLOUR SORTING
+      // TARGET_HUE = (toggleColsort) ? RED_HUE : BLUE_HUE;
+      // if (detectedHue < 40 && TARGET_HUE == RED_HUE) {
+      //   // Action for red object (e.g., spin intake to collect)
+      //   task::sleep(50);
+      //   intake.stop();
+      //   task::sleep(50);       
+      // }
+      // if (detectedHue > 180) {
+      //   // Action for red object (e.g., spin intake to collect)
+      //   task::sleep(50);
+      //   intake.stop();
+      //   task::sleep(50); 
+      // }
+      // if (detectedHue >= TARGET_HUE - TOLERANCE && detectedHue <= TARGET_HUE + TOLERANCE) {
       //   // Action for red object (e.g., spin intake to collect)
       //   task::sleep(50);
       //   intake.stop();
@@ -384,21 +368,13 @@ void usercontrol(void) {
     }
 
     // LADY BROWN --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    if (wallL.position(deg) >= 0 || (wallL.position(deg) >= -10 && !lbActive)) {
+      wallL.setPosition(0, deg);
+      // if greater than -10 and not moving to a target
+    }
 
-    // if (Controller.ButtonL1.pressing()) {
-    //   lbActive = false;
-    //   wallL.spin(directionType::rev, 12, volt);
-    //   wallR.spin(directionType::rev, 12, volt);
-    // } else if (Controller.ButtonL2.pressing()) {
-    //   lbActive = false;
-    //   wallL.spin(directionType::fwd, 12, volt);
-    //   wallR.spin(directionType::fwd, 12, volt);
-    // } else if (!lbActive){
-    //   // Stop the motors when no button is pressed
-    //   wallL.stop();
-    //   wallR.stop();
-    // }
-
+    Brain.Screen.printAt(5, 200, "ANGLE: %f", wallL.position(deg));
+    
     if (Controller.ButtonL1.pressing()) {
       lbActive = false;
       wallL.spin(directionType::rev, 12, volt);
@@ -463,15 +439,13 @@ void usercontrol(void) {
       }
     } 
 
-    // CLAW
-    // if (Controller.ButtonA.pressing()) {
-    //   Claw.set(toggleClaw);
-    //   toggleClaw = toggleClaw * -1 + 1;
-    //   while (Controller.ButtonA.pressing()) {
-    //     task::sleep(10);
-    //   }
-    // } 
-//sigma sigma sigma
+    // COLOUR SORT TOGGLE
+    if (Controller.ButtonA.pressing()) {
+      toggleColsort = toggleColsort * -1 + 1;
+      while (Controller.ButtonA.pressing()) {
+        task::sleep(10);
+      }
+    } 
     //Replace this line with chassis.control_tank(); for tank drive 
     //or chassis.control_holonomic(); for holo drive.
     chassis.control_arcade();
