@@ -26,7 +26,7 @@ motor_group intake = motor_group(fIntake, hIntake);
 
 inertial Gyro = inertial(PORT13);
 rotation Wall = rotation(PORT19);
-optical ColSort = optical(PORT11);
+optical ColSort = optical(PORT6);
 
 digital_out Clamp = digital_out(Brain.ThreeWirePort.B);
 digital_out Doink = digital_out(Brain.ThreeWirePort.A);

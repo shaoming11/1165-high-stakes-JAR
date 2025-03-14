@@ -181,7 +181,7 @@ void autonomous(void) {
   switch(current_auton_selection){ 
     case 0:
       //turn_test(); 
-      awp_solo_r();
+      grush_b();
       break;
     case 1:         
       drive_test();
@@ -228,7 +228,9 @@ void usercontrol(void) {
   bool lbActive = false;
   double lbLoad = -110;
   double lbScore = -230;
+  double lbZero = -10;
   double lbDescore = -440;
+  double lbTime = 0;
   wallL.setVelocity(80, pct);
 
   // Calibrated hue values for red and blue (replace with your actual values)
@@ -368,11 +370,6 @@ void usercontrol(void) {
     }
 
     // LADY BROWN --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    if (wallL.position(deg) >= 0 || (wallL.position(deg) >= -10 && !lbActive)) {
-      wallL.setPosition(0, deg);
-      // if greater than -10 and not moving to a target
-    }
-
     Brain.Screen.printAt(5, 200, "ANGLE: %f", wallL.position(deg));
     
     if (Controller.ButtonL1.pressing()) {
@@ -380,12 +377,13 @@ void usercontrol(void) {
       wallL.spin(directionType::rev, 12, volt);
       wallR.spin(directionType::rev, 12, volt);
     } else if (Controller.ButtonL2.pressing()) {
-      lbActive = false;
-      wallL.spin(directionType::fwd, 12, volt);
-      wallR.spin(directionType::fwd, 12, volt);
+      lbActive = true;
+      targetPos = lbZero;
+      wallL.spinTo(targetPos, deg, false);  // Non-blocking call
+      wallR.spinTo(targetPos, deg, false);
     } 
     
-    if (!Controller.ButtonL1.pressing() && !Controller.ButtonL2.pressing() && !Shao.ButtonL1.pressing() && !Shao.ButtonL2.pressing() && !lbActive){
+    if ((!Controller.ButtonL1.pressing() && !Controller.ButtonL2.pressing() && !Shao.ButtonL1.pressing() && !Shao.ButtonL2.pressing() && !lbActive)){
       // Stop the motors when no button is pressed
       wallL.stop();
       wallR.stop();
@@ -399,13 +397,15 @@ void usercontrol(void) {
       wallR.spinTo(targetPos, deg, false);
     }
 
+    // ZERO LB
     if (Controller.ButtonLeft.pressing()) {
       lbActive = true;
-      targetPos = lbScore;
+      targetPos = lbZero;
       wallL.spinTo(targetPos, deg, false);  // Non-blocking call
       wallR.spinTo(targetPos, deg, false);
     }
 
+    // DESCORE LB
     if (Controller.ButtonRight.pressing()) {
       lbActive = true;
       targetPos = lbDescore;
