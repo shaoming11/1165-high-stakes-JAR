@@ -105,7 +105,7 @@ void intakecontrol() {
 
 void default_constants(){
   // Each constant set is in the form of (maxVoltage, kP, kI, kD, startI).
-  chassis.set_drive_constants(8, 10, 0, 50, 0); // first val can be 10 or 12
+  chassis.set_drive_constants(6, 1.5, 0, 10, 0);
   chassis.set_heading_constants(6, 0, 0, 0, 0);
   chassis.set_turn_constants(8, .4, 0.03, 3, 15); // 0.009, 15
   chassis.set_swing_constants(12, .3, 0, 2, 15);
@@ -1014,7 +1014,7 @@ void awp_ring_b() {
 }
 
 void drive_test(){
-  chassis.drive_distance(4.2);
+  chassis.drive_distance(24, 90);
   // chassis.drive_distance(8.4);
   // chassis.drive_distance(-4.2);
   // chassis.drive_distance(-8.4);

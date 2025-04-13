@@ -23,6 +23,7 @@ extern motor_group intake;
 extern digital_out Clamp;
 extern digital_out Claw;
 extern digital_out Doink;
+extern digital_out DoinkR;
 extern inertial Gyro;
 extern optical ColSort;
 extern rotation Wall;

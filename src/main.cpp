@@ -53,7 +53,7 @@ motor_group(RF, RM, RB),
 PORT13,
 
 //Input your wheel diameter. (4" omnis are actually closer to 4.125"):
-2.75,
+15.75,
 
 //External ratio, must be in decimal, in the format of input teeth/output teeth.
 //If your motor has an 84-tooth gear and your wheel has a 60-tooth gear, this value will be 1.4.
@@ -76,10 +76,10 @@ PORT13,
 
 //FOR HOLONOMIC DRIVES ONLY: Input your drive motors by position. This is only necessary for holonomic drives, otherwise this section can be left alone.
 //LF:      //RF:    
-PORT11,     -PORT14,
+PORT5,     -PORT8,
 
 //LB:      //RB: 
-PORT13,     -PORT16,
+PORT7,     -PORT10,
 
 //If you are using position tracking, this is the Forward Tracker port (the tracker which runs parallel to the direction of the chassis).
 //If this is a rotation sensor, enter it in "PORT1" format, inputting the port below.
@@ -132,6 +132,8 @@ void pre_auton() {
     Brain.Screen.printAt(5, 60, "%d", Brain.Battery.capacity());
     Brain.Screen.printAt(5, 80, "Chassis Heading Reading:");
     Brain.Screen.printAt(5, 100, "%f", chassis.get_absolute_heading());
+    Brain.Screen.printAt(5, 160, "Vertical Position:");
+    Brain.Screen.printAt(5, 180, "%f", (chassis.get_left_position_in()+chassis.get_right_position_in())/2.0);
     Brain.Screen.printAt(5, 120, "Selected Auton:");
     switch(current_auton_selection){
       case 0:
@@ -180,8 +182,7 @@ void autonomous(void) {
   auto_started = true;
   switch(current_auton_selection){ 
     case 0:
-      //turn_test(); 
-      grush_b();
+      drive_test();
       break;
     case 1:         
       drive_test();
