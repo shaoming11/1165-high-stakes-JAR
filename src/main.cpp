@@ -50,10 +50,10 @@ motor_group(LF, LM, LB),
 motor_group(RF, RM, RB),
 
 //Specify the PORT NUMBER of your inertial sensor, in PORT format (i.e. "PORT1", not simply "1"):
-PORT13,
+PORT17,
 
 //Input your wheel diameter. (4" omnis are actually closer to 4.125"):
-15.75,
+16.5,
 
 //External ratio, must be in decimal, in the format of input teeth/output teeth.
 //If your motor has an 84-tooth gear and your wheel has a 60-tooth gear, this value will be 1.4.
@@ -179,10 +179,13 @@ void pre_auton() {
  */
 
 void autonomous(void) {
+  // thread DebugLoop = thread(debugLoop);
+  // thread ConveyorLoop = thread(conveyorLoo(void*);
+  // thread ArmLoop = thread(armLoop);
   auto_started = true;
   switch(current_auton_selection){ 
     case 0:
-      drive_test();
+      five_r();
       break;
     case 1:         
       drive_test();
@@ -248,118 +251,12 @@ void usercontrol(void) {
     // Insert user code here. This is where you use the joystick values to
     // update your motors, etc.
     // ........................................................................
-    // LF.setBrake(brake);
-    // LM.setBrake(brake);
-    // LB.setBrake(brake);
-    // RF.setBrake(brake);
-    // RM.setBrake(brake);
-    // RB.setBrake(brake);
     wallL.setBrake(hold);
-    //wallR.setBrake(hold);
-    /*
-    // SHAO --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    // if (Shao.ButtonA.pressing()) {
-    //   TARGET_HUE = toggleColsort ? BLUE_HUE : RED_HUE;
-    //   toggleColsort = toggleColsort * -1 + 1;
-    //   while (Shao.ButtonA.pressing()) {
-    //     task::sleep(10);
-    //   }
-    // }
-    
-    if (Shao.ButtonR1.pressing()) {
-      intake.spin(fwd, 12, volt);
-
-      // // COLOUR SORTING
-      // // Turn on the sensor's LED for better detection
-      // ColSort.setLight(ledState::on);
-
-      // // Get the hue value of the detected color
-      // int detectedHue = ColSort.hue();
-      // if (detectedHue >= TARGET_HUE - TOLERANCE && detectedHue <= TARGET_HUE + TOLERANCE) {
-      //   // Action for red object (e.g., spin intake to collect)
-      //   task::sleep(50);
-      //   intake.stop();
-      //   task::sleep(50);
-      // }
-    }
-    
-    if (Shao.ButtonR2.pressing()) {
-      intake.spin(directionType::rev, 12, volt);
-    }
-
-    // SHAO LADYBROWN -------------------------------------------------------------------------------------
-    if (Shao.ButtonL1.pressing()) {
-      lbActive = false;
-      wallL.spin(directionType::rev, 12, volt);
-      wallR.spin(directionType::rev, 12, volt);
-    } else if (Shao.ButtonL2.pressing()) {
-      lbActive = false;
-      wallL.spin(directionType::fwd, 12, volt);
-      wallR.spin(directionType::fwd, 12, volt);
-    }
-
-    // LOAD LB
-    if (Shao.ButtonLeft.pressing()) {
-      lbActive = true;
-      targetPos = lbLoad;
-      wallL.spinTo(targetPos, deg, false);  // Non-blocking call
-      wallR.spinTo(targetPos, deg, false);
-    }
-
-    // SCORING LB
-    if (Shao.ButtonUp.pressing()) {
-      lbActive = true;
-      targetPos = lbScore;
-      wallL.spinTo(targetPos, deg, false);  // Non-blocking call
-      wallR.spinTo(targetPos, deg, false);
-    }
-
-    // DESCORE LB
-    if (Shao.ButtonX.pressing()) {
-      lbActive = true;
-      targetPos = lbDescore;
-      wallL.spinTo(targetPos, deg, false);  // Non-blocking call
-      wallR.spinTo(targetPos, deg, false);
-    }
-
-    if (Shao.ButtonDown.pressing()) {
-      lbActive = false;
-      wallL.resetPosition();
-      wallR.resetPosition();
-    }
-    */
-
+    printf("Inertial Heading: %.2f\n", Gyro.heading());
 
     // MAIN CONTROLLER -------------------------------------------------------------------------------------
     if (Controller.ButtonR1.pressing()) {
       intake.spin(fwd, 12, volt);
-
-      // // Turn on the sensor's LED for better detection
-      // ColSort.setLight(ledState::on);
-
-      // // Get the hue value of the detected color
-      // int detectedHue = ColSort.hue();
-
-      // // COLOUR SORTING
-      // TARGET_HUE = (toggleColsort) ? RED_HUE : BLUE_HUE;
-      // if (detectedHue < 40 && TARGET_HUE == RED_HUE) {
-      //   // Action for red object (e.g., spin intake to collect)
-      //   task::sleep(50);
-      //   intake.stop();
-      //   task::sleep(50);       
-      // }
-      // if (detectedHue > 180) {
-      //   // Action for red object (e.g., spin intake to collect)
-      //   task::sleep(50);
-      //   intake.stop();
-      //   task::sleep(50); 
-      // }
-      // if (detectedHue >= TARGET_HUE - TOLERANCE && detectedHue <= TARGET_HUE + TOLERANCE) {
-      //   // Action for red object (e.g., spin intake to collect)
-      //   task::sleep(50);
-      //   intake.stop();
-      //   task::sleep(50);
-      // }
     }
     
     if (Controller.ButtonR2.pressing()) {

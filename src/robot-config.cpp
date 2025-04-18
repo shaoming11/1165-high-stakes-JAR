@@ -24,7 +24,7 @@ motor wallL = motor(PORT11, ratio18_1, false);
 motor wallR = motor(PORT3, ratio18_1, true);
 motor_group intake = motor_group(fIntake, hIntake);
 
-inertial Gyro = inertial(PORT16);
+inertial Gyro = inertial(PORT17);
 rotation Wall = rotation(PORT13);
 optical ColSort = optical(PORT12);
 
