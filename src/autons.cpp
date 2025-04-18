@@ -445,7 +445,9 @@ void five_r() {
   chassis.turn_to_angle(140);
   task::sleep(300);
   chassis.drive_distance(6);
-  chassis.drive_distance(-2);
+  chassis.drive_distance(-4);
+  chassis.turn_to_angle(70);
+  chassis.drive_distance(4);
   chassis.turn_to_angle(45);
   chassis.drive_distance(48);
   chassis.drive_distance(60);
