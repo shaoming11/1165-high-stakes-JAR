@@ -431,21 +431,28 @@ void five_r() {
 
   //armToAlliance = true;
   wallL.setVelocity(200, rpm);
-  wallL.spinTo(-240, deg, false);
+  wallL.spinTo(-600, deg, false);
   chassis.drive_distance(3);
   chassis.turn_to_angle(5);
   chassis.drive_distance(-36, 0, 5, 0);
   wallL.spinTo(0, deg, false);
   Clamp.set(1);
   task::sleep(50);
-
   intake.spin(fwd, 12, volt);
+
+  chassis.turn_to_angle(-100);
+  task::sleep(15000);
+  chassis.drive_distance(12);
+  Doink.set(true);
+  chassis.drive_distance(-36);
+
   chassis.turn_to_angle(170);
   chassis.drive_distance(21);
   chassis.turn_to_angle(140);
   task::sleep(300);
   chassis.drive_distance(6);
   chassis.drive_distance(-4);
+
   chassis.turn_to_angle(70);
   chassis.drive_distance(4);
   chassis.turn_to_angle(45);
