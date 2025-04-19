@@ -223,6 +223,9 @@ void autonomous(void) {
 
 void usercontrol(void) {
   // User control code here, inside the loop
+  //thread IntakeLoop(conveyorLoop);
+
+
   bool toggleClamp = 1;
   bool toggleClaw = 1;
   bool toggleDoink = 1;
@@ -235,7 +238,7 @@ void usercontrol(void) {
   double lbZero = -10;
   double lbDescore = -440;
   double lbTime = 0;
-  wallL.setVelocity(80, pct);
+  wallL.setVelocity(100, pct);
 
   // Calibrated hue values for red and blue (replace with your actual values)
   int RED_HUE = 20;    // Replace with the actual hue value for red
@@ -252,14 +255,14 @@ void usercontrol(void) {
     // update your motors, etc.
     // ........................................................................
     wallL.setBrake(hold);
-    printf("Inertial Heading: %.2f\n", Gyro.heading());
+    //printf("Inertial Heading: %.2f\n", Gyro.heading());
 
     // MAIN CONTROLLER -------------------------------------------------------------------------------------
     if (Controller.ButtonR1.pressing()) {
       intake.spin(fwd, 12, volt);
     }
     
-    if (Controller.ButtonR2.pressing()) {
+    else if (Controller.ButtonR2.pressing()) {
       intake.spin(directionType::rev, 12, volt);
     }
     
@@ -275,10 +278,9 @@ void usercontrol(void) {
       wallL.spin(directionType::rev, 12, volt);
       wallR.spin(directionType::rev, 12, volt);
     } else if (Controller.ButtonL2.pressing()) {
-      lbActive = true;
-      targetPos = lbZero;
-      wallL.spinTo(targetPos, deg, false);  // Non-blocking call
-      wallR.spinTo(targetPos, deg, false);
+      lbActive = false;
+      wallL.spin(directionType::fwd, 12, volt);
+      wallR.spin(directionType::fwd, 12, volt);
     } 
     
     if ((!Controller.ButtonL1.pressing() && !Controller.ButtonL2.pressing() && !Shao.ButtonL1.pressing() && !Shao.ButtonL2.pressing() && !lbActive)){
@@ -330,7 +332,7 @@ void usercontrol(void) {
 
     // DOINKER
     if (Controller.ButtonY.pressing()) {
-      Doink.set(toggleDoink);
+      DoinkR.set(toggleDoink);
       toggleDoink = toggleDoink * -1 + 1;
       while (Controller.ButtonY.pressing()) {
         task::sleep(10);

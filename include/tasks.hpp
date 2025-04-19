@@ -24,5 +24,5 @@ extern bool armToScorePos;
 extern bool armToAlliance;
 
 void debugLoop(void* params);
-void conveyorLoop(void* params);
+void conveyorLoop();
 void armLoop(void* params);

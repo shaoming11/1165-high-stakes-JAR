@@ -29,8 +29,8 @@ rotation Wall = rotation(PORT13);
 optical ColSort = optical(PORT12);
 
 digital_out Clamp = digital_out(Brain.ThreeWirePort.B);
-digital_out Doink = digital_out(Brain.ThreeWirePort.A);
-digital_out DoinkR = digital_out(Brain.ThreeWirePort.C);
+digital_out Doink = digital_out(Brain.ThreeWirePort.C);
+digital_out DoinkR = digital_out(Brain.ThreeWirePort.A);
 
 void vexcodeInit( void ) {
   // nothing to initialize

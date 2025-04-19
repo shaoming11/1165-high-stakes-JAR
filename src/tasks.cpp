@@ -1,6 +1,6 @@
 #include "vex.h"
 #include "robot-config.h"
-#include "tasks.h"
+#include "tasks.hpp"
 
 ConveyorDirection_e convDir = STOP;
 int convVelocity            = 0;
@@ -39,7 +39,7 @@ void debugLoop(void *params) {
   }
 }
 
-void conveyorLoop(void *params) {
+void conveyorLoop() {
   uint32_t now = Brain.Timer.time(msec);
   int jamcount = 0;
   while (true) {
@@ -50,26 +50,26 @@ void conveyorLoop(void *params) {
       && ColSort.hue() < SORT_COLOUR + 20 
       && ColSort.isNearObject()){
         jamcount = 0;
-        waitUntil(50);
+        task::sleep(50);
         hIntake.spin(directionType::rev, 12, volt);
-        waitUntil(500);
+        task::sleep(500);
         hIntake.spin(fwd, 12, volt);
       }
       //red or not detected
       else if (fabs(hIntake.torque())>=1.0 && fabs(hIntake.velocity(rpm)) <= 1 && (Wall.position(deg) > 2500 || Wall.position(deg) < 1000) && doAntiJam){
         jamcount++;
-        waitUntil(10);
+        task::sleep(10);
         if (jamcount>10){
           hIntake.setVelocity(-600, rpm);
-          waitUntil(100);
+          task::sleep(100);
           hIntake.setVelocity(600, rpm);
           
         }
       }
       else {
         jamcount = 0;
-        hIntake.setVelocity(convVelocity, rpm);
-        intake.setVelocity(convVelocity, rpm);
+        hIntake.setVelocity(600, rpm);
+        intake.setVelocity(600, rpm);
       }
     } 
     else if (convDir == BACKWARD) 
@@ -88,7 +88,7 @@ void conveyorLoop(void *params) {
       intake.setVelocity(0, rpm);
     }
 
-    waitUntil(1);
+    task::sleep(1);
   }
 }
 

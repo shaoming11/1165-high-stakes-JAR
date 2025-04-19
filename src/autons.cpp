@@ -430,34 +430,39 @@ void five_r() {
   // armToAlliance = true;
 
   //armToAlliance = true;
+  Clamp.set(1);
+  wallL.setVelocity(200, rpm);
+  intake.spin(fwd, 12, volt);
+  wallL.spinTo(60, deg, false);
+  chassis.drive_distance(24);
+  chassis.turn_to_angle(45);
+  wallL.spinTo(180, deg, true);
+  task::sleep(15000);
+
   wallL.setVelocity(200, rpm);
   wallL.spinTo(-600, deg, false);
   chassis.drive_distance(3);
+  chassis.drive_distance(-6);
   chassis.turn_to_angle(5);
-  chassis.drive_distance(-36, 0, 5, 0);
-  wallL.spinTo(0, deg, false);
+  chassis.drive_distance(-40, 0, 5, 0);
+  wallL.spin(fwd, 12, volt);
   Clamp.set(1);
   task::sleep(50);
   intake.spin(fwd, 12, volt);
 
-  chassis.turn_to_angle(-100);
-  task::sleep(15000);
-  chassis.drive_distance(12);
-  Doink.set(true);
-  chassis.drive_distance(-36);
-
   chassis.turn_to_angle(170);
-  chassis.drive_distance(21);
+  chassis.drive_distance(12);
   chassis.turn_to_angle(140);
   task::sleep(300);
-  chassis.drive_distance(6);
-  chassis.drive_distance(-4);
+  chassis.drive_distance(10);
+  chassis.drive_distance(-8);
 
   chassis.turn_to_angle(70);
-  chassis.drive_distance(4);
-  chassis.turn_to_angle(45);
-  chassis.drive_distance(48);
-  chassis.drive_distance(60);
+  chassis.drive_distance(15);
+  chassis.turn_to_angle(35);
+  chassis.drive_distance(30);
+  chassis.turn_to_angle(70);
+  chassis.drive_distance(20, 0, 12);
   // rest is toilet mech
 }
 
