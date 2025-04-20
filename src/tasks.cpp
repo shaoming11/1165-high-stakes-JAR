@@ -1,6 +1,5 @@
 #include "vex.h"
 #include "robot-config.h"
-#include "tasks.hpp"
 
 ConveyorDirection_e convDir = STOP;
 int convVelocity            = 0;
@@ -12,45 +11,42 @@ bool armToLoadPos           = false;
 bool armToStartPos          = false;
 bool armToScorePos          = false;
 bool armToScore             = false;
-bool armToAlliance          = false;
 
 static void armPID(int target){
   uint32_t now = Brain.Timer.time(msec);
-  
 
-  float kP = 0.015;
+  float kP = 0.25;
 
   int error = target - Wall.position(deg);
   uint32_t startTime = Brain.Timer.time(msec);
 
-  while (abs(error) > 50){
-    wallL.spin(fwd, kP*error, voltageUnits::mV);
+  while (abs(error) > 1){
+    wallL.spin(fwd, kP*error, voltageUnits::volt);
     error = target - Wall.position(deg);
-    // pros::Task::delay_until(&now, 2);
-    waitUntil(2);
+    task::sleep(2);
   }
 }
 
-void debugLoop(void *params) {
+int debugLoop(void *params) {
   uint32_t now = Brain.Timer.time(msec);
 
   while(1){
-    waitUntil(20);
+    task::sleep(20);
   }
+
+  return 0;
 }
 
-void conveyorLoop() {
+int conveyorLoop() {
+  printf("asdf");
   uint32_t now = Brain.Timer.time(msec);
   int jamcount = 0;
   while (true) {
     if (convDir == ConveyorDirection_e::FORWARD) 
     {
-      if (doColorSort 
-      && ColSort.hue() > SORT_COLOUR - 20 
-      && ColSort.hue() < SORT_COLOUR + 20 
-      && ColSort.isNearObject()){
+      if (ColSort.hue() > SORT_COLOUR - 20 && ColSort.hue() < SORT_COLOUR + 20 && doColorSort && ColSort.isNearObject()){ //  && 
         jamcount = 0;
-        task::sleep(50);
+        task::sleep(100);
         hIntake.spin(directionType::rev, 12, volt);
         task::sleep(500);
         hIntake.spin(fwd, 12, volt);
@@ -60,61 +56,55 @@ void conveyorLoop() {
         jamcount++;
         task::sleep(10);
         if (jamcount>10){
-          hIntake.setVelocity(-600, rpm);
+          hIntake.spin(directionType::rev, 12, volt);
           task::sleep(100);
-          hIntake.setVelocity(600, rpm);
+          hIntake.spin(fwd, 12, volt);
           
         }
       }
-      else {
+      else { // change if (1) to else
         jamcount = 0;
-        hIntake.setVelocity(600, rpm);
-        intake.setVelocity(600, rpm);
+        hIntake.spin(fwd, 12, volt);
       }
     } 
     else if (convDir == BACKWARD) 
     {
-        hIntake.setVelocity(-600, rpm);
-        intake.setVelocity(-600, rpm);
-    } 
-    else if (convDir == FIRST) 
-    {
-      hIntake.setVelocity(0, rpm);
-      intake.setVelocity(600, rpm);
+      hIntake.spin(directionType::rev, 12, volt);
     } 
     else 
     {
-      hIntake.setVelocity(0, rpm);
-      intake.setVelocity(0, rpm);
+      hIntake.spin(fwd, 0, volt);
     }
 
     task::sleep(1);
   }
+
+  return 0;
 }
 
-void armLoop(void *params) {
+int armLoop() {
   uint32_t now = Brain.Timer.time(msec);
 
   while (true) {
-    Brain.Screen.printAt(5, 100, "arm: %d", Wall.position(deg));
+    Brain.Screen.printAt(5, 180, "arm: %.2f", Wall.position(deg));
     
     if (armToLoadPos){
-      armPID(1500);
+      armPID(-14);
       // armToLoadPos = false;
       
     } if(armToStartPos){
-      armPID(100);
+      armPID(0);
 
     } else if(armToScore){
-      armPID(18750);
+      armPID(-200);
 
     } else if(armToScorePos){
-      armPID(4000);
+      armPID(-125);
 
-    } else if(armToAlliance){
-      armPID(25000);
     }
 
-    waitUntil(1);
+    task::sleep(1);
   }
+
+  return 0;
 }

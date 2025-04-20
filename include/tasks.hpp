@@ -2,7 +2,7 @@
 
 // 210 for blue
 // 20 for red
-constexpr int SORT_COLOUR = 20;
+constexpr int SORT_COLOUR = 210;
 
 typedef enum { 
   FORWARD = 0, 
@@ -21,8 +21,7 @@ extern bool armToLoadPos;
 extern bool armToStartPos;
 extern bool armToScore;
 extern bool armToScorePos;
-extern bool armToAlliance;
 
-void debugLoop(void* params);
-void conveyorLoop();
-void armLoop(void* params);
+int debugLoop(void* params);
+int conveyorLoop();
+int armLoop();

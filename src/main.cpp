@@ -119,6 +119,7 @@ void pre_auton() {
   // Initializing Robot Configuration. DO NOT REMOVE!
   vexcodeInit();
   default_constants();
+  ColSort.integrationTime(10);
   Gyro.calibrate();
   while (Gyro.isCalibrating()) { // Wait for calibration to finish
     task::sleep(100); // Prevent CPU overload
@@ -179,12 +180,16 @@ void pre_auton() {
  */
 
 void autonomous(void) {
-  // thread DebugLoop = thread(debugLoop);
-  // thread ConveyorLoop = thread(conveyorLoo(void*);
-  // thread ArmLoop = thread(armLoop);
+  task ConveyorLoop = task(conveyorLoop);
+  task ArmLoop = task(armLoop);
+
+  doColorSort   = true;
+  doAntiJam     = true;
+
   auto_started = true;
   switch(current_auton_selection){ 
     case 0:
+      //swing_test();
       five_r();
       break;
     case 1:         
@@ -223,28 +228,22 @@ void autonomous(void) {
 
 void usercontrol(void) {
   // User control code here, inside the loop
-  //thread IntakeLoop(conveyorLoop);
+  Wall.setPosition(0, deg);
 
+  task conveyorTask = task(conveyorLoop);
+  task armTask = task(armLoop);
+
+  doColorSort   = true;
+  doAntiJam     = false;
+  armToLoadPos           = false;
+  armToStartPos          = false;
+  armToScorePos          = false;
+  armToScore             = false;
 
   bool toggleClamp = 1;
   bool toggleClaw = 1;
   bool toggleDoink = 1;
-  bool toggleColsort = 1; // sort red is 0, sort blue is 1
   
-  double targetPos = 0;
-  bool lbActive = false;
-  double lbLoad = -110;
-  double lbScore = -230;
-  double lbZero = -10;
-  double lbDescore = -440;
-  double lbTime = 0;
-  wallL.setVelocity(100, pct);
-
-  // Calibrated hue values for red and blue (replace with your actual values)
-  int RED_HUE = 20;    // Replace with the actual hue value for red
-  int BLUE_HUE = 200; // Replace with the actual hue value for blue
-  int TOLERANCE = 50; // Tolerance for hue detection (adjust as needed)
-  int TARGET_HUE = BLUE_HUE;
   while (1) {
     // This is the main execution loop for the user control program.
     // Each time through the loop your program should update motor + servo
@@ -259,31 +258,38 @@ void usercontrol(void) {
 
     // MAIN CONTROLLER -------------------------------------------------------------------------------------
     if (Controller.ButtonR1.pressing()) {
-      intake.spin(fwd, 12, volt);
+      convDir = FORWARD;
+      //intake.spin(fwd, 12, volt);
     }
     
     else if (Controller.ButtonR2.pressing()) {
-      intake.spin(directionType::rev, 12, volt);
+      convDir = BACKWARD;
+      //intake.spin(directionType::rev, 12, volt);
     }
     
-    if ((!Shao.ButtonR1.pressing() && !Shao.ButtonR2.pressing()) && (!Controller.ButtonR1.pressing() && !Controller.ButtonR2.pressing())) {
-      intake.spin(fwd, 0, volt);
+    if (!Controller.ButtonR1.pressing() && !Controller.ButtonR2.pressing()) {
+      convDir = STOP;
     }
-
-    // LADY BROWN --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    Brain.Screen.printAt(5, 200, "ANGLE: %f", wallL.position(deg));
     
     if (Controller.ButtonL1.pressing()) {
-      lbActive = false;
+      armToLoadPos           = false;
+      armToStartPos          = false;
+      armToScorePos          = false;
+      armToScore             = false; 
+
       wallL.spin(directionType::rev, 12, volt);
       wallR.spin(directionType::rev, 12, volt);
     } else if (Controller.ButtonL2.pressing()) {
-      lbActive = false;
+      armToLoadPos           = false;
+      armToStartPos          = false;
+      armToScorePos          = false;
+      armToScore             = false;
+
       wallL.spin(directionType::fwd, 12, volt);
       wallR.spin(directionType::fwd, 12, volt);
     } 
     
-    if ((!Controller.ButtonL1.pressing() && !Controller.ButtonL2.pressing() && !Shao.ButtonL1.pressing() && !Shao.ButtonL2.pressing() && !lbActive)){
+    if ((!Controller.ButtonL1.pressing() && !Controller.ButtonL2.pressing())){
       // Stop the motors when no button is pressed
       wallL.stop();
       wallR.stop();
@@ -291,32 +297,26 @@ void usercontrol(void) {
 
     // LOAD LB
     if (Controller.ButtonDown.pressing()) {
-      lbActive = true;
-      targetPos = lbLoad;
-      wallL.spinTo(targetPos, deg, false);  // Non-blocking call
-      wallR.spinTo(targetPos, deg, false);
     }
 
     // ZERO LB
     if (Controller.ButtonLeft.pressing()) {
-      lbActive = true;
-      targetPos = lbZero;
-      wallL.spinTo(targetPos, deg, false);  // Non-blocking call
-      wallR.spinTo(targetPos, deg, false);
+
     }
 
     // DESCORE LB
     if (Controller.ButtonRight.pressing()) {
-      lbActive = true;
-      targetPos = lbDescore;
-      wallL.spinTo(targetPos, deg, false);  // Non-blocking call
-      wallR.spinTo(targetPos, deg, false);
+      armToLoadPos           = false;
+      armToStartPos          = false;
+      armToScorePos          = !armToScorePos;
+      armToScore             = false;
     }
 
     if (Controller.ButtonUp.pressing()) {
-      lbActive = false;
-      wallL.resetPosition();
-      wallR.resetPosition();
+      armToLoadPos           = !armToLoadPos;
+      armToStartPos          = false;
+      armToScorePos          = false;
+      armToScore             = false;
     }
 
     // PNEUMATICS -------------------------------------------------------------------------------------
@@ -332,7 +332,7 @@ void usercontrol(void) {
 
     // DOINKER
     if (Controller.ButtonY.pressing()) {
-      DoinkR.set(toggleDoink);
+      Doink.set(toggleDoink);
       toggleDoink = toggleDoink * -1 + 1;
       while (Controller.ButtonY.pressing()) {
         task::sleep(10);
@@ -341,7 +341,6 @@ void usercontrol(void) {
 
     // COLOUR SORT TOGGLE
     if (Controller.ButtonA.pressing()) {
-      toggleColsort = toggleColsort * -1 + 1;
       while (Controller.ButtonA.pressing()) {
         task::sleep(10);
       }
