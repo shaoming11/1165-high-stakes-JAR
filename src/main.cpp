@@ -297,6 +297,10 @@ void usercontrol(void) {
 
     // LOAD LB
     if (Controller.ButtonDown.pressing()) {
+      armToLoadPos           = true;
+      armToStartPos          = false;
+      armToScorePos          = false;
+      armToScore             = false;
     }
 
     // ZERO LB
@@ -308,15 +312,11 @@ void usercontrol(void) {
     if (Controller.ButtonRight.pressing()) {
       armToLoadPos           = false;
       armToStartPos          = false;
-      armToScorePos          = !armToScorePos;
+      armToScorePos          = true;
       armToScore             = false;
     }
 
     if (Controller.ButtonUp.pressing()) {
-      armToLoadPos           = !armToLoadPos;
-      armToStartPos          = false;
-      armToScorePos          = false;
-      armToScore             = false;
     }
 
     // PNEUMATICS -------------------------------------------------------------------------------------
