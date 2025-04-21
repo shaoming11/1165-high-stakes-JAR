@@ -20,7 +20,7 @@ static void armPID(int target){
   int error = target - Wall.position(deg);
   uint32_t startTime = Brain.Timer.time(msec);
 
-  while (abs(error) > 1){
+  if (abs(error) > 1){
     wallL.spin(fwd, kP*error, voltageUnits::volt);
     error = target - Wall.position(deg);
     task::sleep(2);
@@ -86,22 +86,23 @@ int armLoop() {
   uint32_t now = Brain.Timer.time(msec);
 
   while (true) {
-    Brain.Screen.printAt(5, 180, "arm: %.2f", Wall.position(deg));
-    
-    if (armToLoadPos){
-      armPID(-14);
-      // armToLoadPos = false;
+    if ((!Controller.ButtonL1.pressing() && !Controller.ButtonL2.pressing())) {
+      if (armToLoadPos){
+        armPID(-20);
+        // armToLoadPos = false;
       
-    } if(armToStartPos){
-      armPID(0);
+      } else if(armToStartPos){
+        armPID(0);
 
-    } else if(armToScore){
-      armPID(-200);
+      } else if(armToScore){
+        armPID(-200);
 
-    } else if(armToScorePos){
-      armPID(-125);
+      } else if(armToScorePos){
+        armPID(-125);
 
+      }
     }
+    Brain.Screen.printAt(5, 180, "arm: %.2f", Wall.position(deg));
 
     task::sleep(1);
   }
