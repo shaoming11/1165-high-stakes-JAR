@@ -88,7 +88,7 @@ int armLoop() {
   while (true) {
     if ((!Controller.ButtonL1.pressing() && !Controller.ButtonL2.pressing())) {
       if (armToLoadPos){
-        armPID(-20);
+        armPID(-25);
         // armToLoadPos = false;
       
       } else if(armToStartPos){

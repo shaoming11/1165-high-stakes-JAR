@@ -113,7 +113,7 @@ void default_constants(){
   // Each exit condition set is in the form of (settle_error, settle_time, timeout).
   chassis.set_drive_exit_conditions(1.5, 100, 5000);
   chassis.set_turn_exit_conditions(2.0, 200, 3000);
-  chassis.set_swing_exit_conditions(2.0, 300, 3000);
+  chassis.set_swing_exit_conditions(2.0, 150, 3000);
 }
 
 /**
@@ -438,44 +438,41 @@ void five_r() {
   // chassis.turn_to_angle(45);
   // wallL.spinTo(180, deg, true);
   // task::sleep(15000);
-  Wall.setPosition(-15, deg);
+  Wall.setPosition(-27, deg);
 
   armToScore = true;
   chassis.drive_distance(3);
   armToScore = false;
   chassis.drive_distance(-40, 0, 5, 0);
   armToStartPos = true;
-  wallL.spin(fwd, 12, volt);
   Clamp.set(1);
   task::sleep(50);
 
-  chassis.turn_to_angle(-105);
-  chassis.drive_distance(18);
-  task::sleep(100);
+  chassis.turn_to_angle(-101); // -105
+  chassis.drive_distance(16);
   Doink.set(1);
-  chassis.drive_distance(-29);
+  task::sleep(100);
+  chassis.drive_distance(-24);
   
   convDir = FORWARD;
   chassis.set_turn_exit_conditions(2.0, 150, 3000);
-  chassis.turn_to_angle(-115);
+  chassis.turn_to_angle(210);
   Doink.set(0);
   chassis.turn_to_angle(190);
 
   // the 3 rings
-  chassis.drive_distance(14);
-  chassis.turn_to_angle(145);
-  chassis.drive_distance(8);
-  task::sleep(15000);
-
-  chassis.drive_distance(-10);
-  chassis.turn_to_angle(70);
+  chassis.drive_distance(12);
+  chassis.right_swing_to_angle(115);
+  chassis.drive_distance(10, chassis.get_absolute_heading(), 4);
+  chassis.right_swing_to_angle(-45);
+  chassis.drive_distance(12);
 
   armToStartPos = false;
   armToLoadPos = true;
   doAntiJam = false;
 
-  chassis.drive_distance(18);
   chassis.turn_to_angle(165);
+  task::sleep(15000);
 
   armToLoadPos = false;
   armToScorePos = true;

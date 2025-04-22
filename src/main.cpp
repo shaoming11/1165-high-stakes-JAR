@@ -179,6 +179,8 @@ void pre_auton() {
  * autons.cpp and declared in autons.h.
  */
 
+ // autonomous1
+
 void autonomous(void) {
   task ConveyorLoop = task(conveyorLoop);
   task ArmLoop = task(armLoop);
