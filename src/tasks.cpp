@@ -57,7 +57,7 @@ int conveyorLoop() {
         task::sleep(10);
         if (jamcount>10){
           hIntake.spin(directionType::rev, 12, volt);
-          task::sleep(100);
+          task::sleep(200);
           hIntake.spin(fwd, 12, volt);
           
         }

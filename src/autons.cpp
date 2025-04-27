@@ -283,14 +283,18 @@ ARCHIVES
   intake.stop();
 */
 void eight_r() {
-  Wall.setPosition(-27, deg);
+  chassis.set_turn_constants(8, .8, 0.03, 6, 15);
 
-  armToScore = true;
-  chassis.drive_distance(3);
-  armToScore = false;
-  chassis.drive_distance(-40, 0, 5, 0);
+  chassis.drive_distance(10);
+  armToScorePos = true;
+  task::sleep(400);
+  
+  chassis.drive_distance(-27, 0, 10, 0, 1.5, 100, 1500, 1.5, 0, 20, 0, 0, 0, 0, 0);
+  chassis.drive_distance(-13, 0, 5, 0);
+  armToScorePos = false;
   armToStartPos = true;
   Clamp.set(1);
+
   task::sleep(50);
 
   chassis.turn_to_angle(-101); // -105
@@ -331,99 +335,92 @@ void eight_r() {
 }
 
 void five_r() {
-  armToLoadPos = true;
+  // 5 ring
+  chassis.set_turn_constants(8, .8, 0.03, 6, 15);
+
+  chassis.drive_distance(10);
+  armToScorePos = true;
+  task::sleep(400);
+  
+  chassis.drive_distance(-27, 0, 10, 0, 1.5, 100, 1500, 1.5, 0, 20, 0, 0, 0, 0, 0);
+  chassis.drive_distance(-13, 0, 5, 0);
+  armToScore = false;
+  armToStartPos = true;
+  Clamp.set(1);
+
+  task::sleep(50);
+  chassis.turn_to_angle(165);
   convDir = FORWARD;
-  chassis.drive_distance(3);
 
-  armToLoadPos = false;
-  armToScore = true;
-  task::sleep(300);
-  convDir = STOP;
-  task::sleep(600);
-  task::sleep(15000);
+  // the 3 rings
+  chassis.drive_distance(23);
+  chassis.right_swing_to_angle(120);
+  chassis.drive_distance(10.5, chassis.get_absolute_heading(), 4);
+  chassis.drive_distance(-4);
+  chassis.turn_to_angle(22);
+  chassis.drive_distance(25.5, 4);
 
-  chassis.drive_distance(-40, 0, 5, 0);
+  // chassis.drive_distance(-6);
+
+  // get corner rings
+  doAntiJam = false;
+  chassis.turn_to_angle(68);
+  chassis.drive_timeout = 600;
+  chassis.drive_distance(26, chassis.get_absolute_heading(), 14);
+  chassis.drive_timeout = 1200;
+  chassis.drive_distance(16, chassis.get_absolute_heading(), 4);
+  default_constants();
+  task::sleep(500);
+  chassis.drive_distance(-14, 65, 6);
+  task::sleep(500);
+  chassis.drive_distance(11, 65, 4);
+
+  // get out
+  armToStartPos = false;
+  task::sleep(500);
+  armToLoadPos = true;
+  chassis.drive_distance(-60, 65);
+
+
+}
+
+void five_b() {
+  // 5 ring
+  chassis.set_turn_constants(8, .8, 0.03, 6, 15);
+
+  chassis.drive_distance(10);
+  armToScorePos = true;
+  task::sleep(400);
+  
+  chassis.drive_distance(-27, 0, 10, 0, 1.5, 100, 5000, 1.5, 0, 20, 0, 0, 0, 0, 0);
+  chassis.drive_distance(-13, 0, 5, 0);
   armToScore = false;
   armToStartPos = true;
   Clamp.set(1);
   task::sleep(50);
-  chassis.turn_to_angle(160);
-  convDir = FORWARD;
-  task::sleep(15000);
 
-  // the 3 rings
-  chassis.drive_distance(20);
-  chassis.right_swing_to_angle(115);
-  chassis.drive_distance(10, chassis.get_absolute_heading(), 4);
-  chassis.right_swing_to_angle(-45);
-  chassis.drive_distance(12);
-
-  armToStartPos = false;
-  armToLoadPos = true;
-  doAntiJam = false;
-
-  chassis.turn_to_angle(165);
-  task::sleep(15000);
-
-  armToLoadPos = false;
-  armToScorePos = true;
-
-  chassis.drive_distance(10);
-  convDir = STOP;
-
-  //chassis.turn_to_angle(70);
-  chassis.drive_distance(10, 0, 12);
-  // rest is toilet mech
-}
-
-void five_b() {
-  /*
-  // FINALS 3 11:04:10
-  drive forward
-  face wall stake
-  lb spin
-  face 2 stack
-  spin intake
-  drive forward
-  face mogo (should be 90 degree)
-  face 4 stack
-  drive forward
-  face other part of 4 stack
-  drive forward
-  drive back
-  face corner stack
-  doink set true
-  face positive corner
-  drive forward
-  */
-
-  // 5 ring
-  chassis.set_drive_constants(6, 3, 0.01, 0, 0);
-  chassis.drive_distance(-5.7);
-  Clamp.set(1);
-  task::sleep(250);
-  intake.spin(fwd, 12, volt);
-  task::sleep(250);
-  chassis.turn_to_angle(-135);
-  chassis.drive_distance(3.5);
-  chassis.drive_distance(-2);
-  chassis.turn_to_angle(-105); // face 2nd 2 stak
-  chassis.drive_distance(4.5);
-  chassis.drive_distance(-4);
-  task::sleep(250);
-  chassis.turn_to_angle(-60);
-  chassis.drive_distance(3);
-  intake.stop();
-  chassis.drive_distance(2);
-  chassis.drive_distance(-2);
-  intake.spin(fwd, 12, volt);
-  chassis.turn_to_angle(-25);
-  chassis.drive_distance(8.5);// drive to 4 stack
-  task::sleep(1000);
-  chassis.drive_distance(-2);
-  //Redirect.set(1);
-  chassis.turn_to_angle(-90);
-  chassis.drive_distance(-17);
+  // intake.spin(fwd, 12, volt);
+  // task::sleep(250);
+  // chassis.turn_to_angle(-135);
+  // chassis.drive_distance(3.5);
+  // chassis.drive_distance(-2);
+  // chassis.turn_to_angle(-105); // face 2nd 2 stak
+  // chassis.drive_distance(4.5);
+  // chassis.drive_distance(-4);
+  // task::sleep(250);
+  // chassis.turn_to_angle(-60);
+  // chassis.drive_distance(3);
+  // intake.stop();
+  // chassis.drive_distance(2);
+  // chassis.drive_distance(-2);
+  // intake.spin(fwd, 12, volt);
+  // chassis.turn_to_angle(-25);
+  // chassis.drive_distance(8.5);// drive to 4 stack
+  // task::sleep(1000);
+  // chassis.drive_distance(-2);
+  // //Redirect.set(1);
+  // chassis.turn_to_angle(-90);
+  // chassis.drive_distance(-17);
 }
 
 void awp_solo_b() {

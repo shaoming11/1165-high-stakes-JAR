@@ -199,7 +199,7 @@ void autonomous(void) {
   switch(current_auton_selection){ 
     case 0:
       //swing_test();
-      awp_goal_r();
+      five_r();
       break;
     case 1:         
       drive_test();
