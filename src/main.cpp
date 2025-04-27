@@ -185,14 +185,21 @@ void autonomous(void) {
   task ConveyorLoop = task(conveyorLoop);
   task ArmLoop = task(armLoop);
 
+  Wall.setPosition(0, deg);
+
   doColorSort   = true;
   doAntiJam     = true;
+
+  armToLoadPos           = false;
+  armToStartPos          = false;
+  armToScorePos          = false;
+  armToScore             = false;
 
   auto_started = true;
   switch(current_auton_selection){ 
     case 0:
       //swing_test();
-      five_r();
+      awp_goal_r();
       break;
     case 1:         
       drive_test();
@@ -230,7 +237,6 @@ void autonomous(void) {
 
 void usercontrol(void) {
   // User control code here, inside the loop
-  Wall.setPosition(0, deg);
 
   task conveyorTask = task(conveyorLoop);
   task armTask = task(armLoop);
@@ -245,6 +251,7 @@ void usercontrol(void) {
   bool toggleClamp = 1;
   bool toggleClaw = 1;
   bool toggleDoink = 1;
+  bool toggleDoinkR = 1;
   
   while (1) {
     // This is the main execution loop for the user control program.
@@ -341,8 +348,10 @@ void usercontrol(void) {
       }
     } 
 
-    // COLOUR SORT TOGGLE
+    // Doinker
     if (Controller.ButtonA.pressing()) {
+      DoinkR.set(toggleDoinkR);
+      toggleDoinkR = toggleDoinkR * -1 + 1;
       while (Controller.ButtonA.pressing()) {
         task::sleep(10);
       }

@@ -273,6 +273,7 @@ void Drive::turn_to_angle(float angle, float turn_max_voltage, float turn_settle
     drive_with_voltage(output, -output);
     task::sleep(10);
   }
+  drive_with_voltage(0,0);
 }
 
 /**

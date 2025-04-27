@@ -9,6 +9,7 @@ void default_constants();
 
 void ladyBrown(double targetDegrees);
 
+void eight_r(); // 8 ring red
 void grush_r();
 void grush_r2();
 void grush_b();
