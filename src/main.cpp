@@ -199,7 +199,7 @@ void autonomous(void) {
   switch(current_auton_selection){ 
     case 0:
       //swing_test();
-      five_r();
+      awp_goal_r();
       break;
     case 1:         
       drive_test();
@@ -340,19 +340,19 @@ void usercontrol(void) {
     }
 
     // DOINKER
-    if (Controller.ButtonY.pressing()) {
+    if (Controller.ButtonA.pressing()) {
       Doink.set(toggleDoink);
       toggleDoink = toggleDoink * -1 + 1;
-      while (Controller.ButtonY.pressing()) {
+      while (Controller.ButtonA.pressing()) {
         task::sleep(10);
       }
     } 
 
     // Doinker
-    if (Controller.ButtonA.pressing()) {
+    if (Controller.ButtonY.pressing()) {
       DoinkR.set(toggleDoinkR);
       toggleDoinkR = toggleDoinkR * -1 + 1;
-      while (Controller.ButtonA.pressing()) {
+      while (Controller.ButtonY.pressing()) {
         task::sleep(10);
       }
     } 

@@ -61,6 +61,15 @@ int conveyorLoop() {
           hIntake.spin(fwd, 12, volt);
           
         }
+      } else if (fabs(hIntake.torque())>=1.0 && fabs(hIntake.velocity(rpm)) <= 1 && (Wall.position(deg) > -30 || Wall.position(deg) < -26) && armToLoadPos == true) {
+        jamcount++;
+        task::sleep(10);
+        if (jamcount>10){
+          hIntake.spin(directionType::rev, 0, volt);
+          task::sleep(50);
+          hIntake.spin(fwd, 12, volt);
+          
+        }
       }
       else { // change if (1) to else
         jamcount = 0;
