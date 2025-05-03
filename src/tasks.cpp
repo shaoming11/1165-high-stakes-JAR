@@ -104,10 +104,10 @@ int armLoop() {
         armPID(0);
 
       } else if(armToScore){
-        armPID(-200);
+        armPID(-270);
 
       } else if(armToScorePos){
-        armPID(-125);
+        armPID(-170);
 
       }
     }

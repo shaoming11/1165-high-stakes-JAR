@@ -199,7 +199,7 @@ void autonomous(void) {
   switch(current_auton_selection){ 
     case 0:
       //swing_test();
-      awp_goal_r();
+      grq_four();
       break;
     case 1:         
       drive_test();
@@ -237,11 +237,14 @@ void autonomous(void) {
 
 void usercontrol(void) {
   // User control code here, inside the loop
+  if (armToStartPos == true) {
+    Wall.setPosition(0, deg);
+  }
 
   task conveyorTask = task(conveyorLoop);
   task armTask = task(armLoop);
 
-  doColorSort   = true;
+  doColorSort   = false;
   doAntiJam     = false;
   armToLoadPos           = false;
   armToStartPos          = false;
