@@ -10,7 +10,9 @@ void default_constants();
 void ladyBrown(double targetDegrees);
 
 void eight_r(); // 8 ring red
-void gr_five(); // goal side, red, 5 ring + alliance, elims
+void gre_five(); // goal side, red, 5 ring + alliance, elims
+void gre_wall(); // goal side, red, 4 ring + alliance, wall stake, elims
+void gre_six(); // goal side, red, 6 ring, elims
 void grq_four(); // goal, red, qual, 4 ring + alliance
 void grush_r2();
 void grush_b();
