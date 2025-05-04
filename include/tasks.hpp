@@ -21,6 +21,7 @@ extern bool armToLoadPos;
 extern bool armToStartPos;
 extern bool armToScore;
 extern bool armToScorePos;
+extern bool armToLow;
 
 int debugLoop(void* params);
 int conveyorLoop();

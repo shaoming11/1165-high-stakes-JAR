@@ -185,15 +185,19 @@ void autonomous(void) {
   task ConveyorLoop = task(conveyorLoop);
   task ArmLoop = task(armLoop);
 
-  Wall.setPosition(0, deg);
+  if (armToLoadPos) {
+    Wall.setPosition(0, deg);
+  } else {
+    armToStartPos          = false;
+  }
 
   doColorSort   = true;
   doAntiJam     = true;
 
   armToLoadPos           = false;
-  armToStartPos          = false;
   armToScorePos          = false;
   armToScore             = false;
+  armToLow              = false;
 
   auto_started = true;
   switch(current_auton_selection){ 
@@ -324,8 +328,8 @@ void usercontrol(void) {
     if (Controller.ButtonRight.pressing()) {
       armToLoadPos           = false;
       armToStartPos          = false;
-      armToScorePos          = true;
-      armToScore             = false;
+      armToScorePos          = false;
+      armToScore             = true;
     }
 
     if (Controller.ButtonUp.pressing()) {

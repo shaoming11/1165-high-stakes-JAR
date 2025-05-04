@@ -11,18 +11,27 @@ bool armToLoadPos           = false;
 bool armToStartPos          = false;
 bool armToScorePos          = false;
 bool armToScore             = false;
+bool armToLow               = false;
+
+static double getWall() {
+  if (Wall.position(deg) > 180) {
+    return Wall.position(deg)-360;
+  } else {
+    return Wall.position(deg);
+  }
+}
 
 static void armPID(int target){
   uint32_t now = Brain.Timer.time(msec);
 
   float kP = 0.25;
 
-  int error = target - Wall.position(deg);
+  int error = target - getWall();
   uint32_t startTime = Brain.Timer.time(msec);
 
   if (abs(error) > 1){
     wallL.spin(fwd, kP*error, voltageUnits::volt);
-    error = target - Wall.position(deg);
+    error = target - getWall();
     task::sleep(2);
   }
 }
@@ -52,25 +61,25 @@ int conveyorLoop() {
         hIntake.spin(fwd, 12, volt);
       }
       //red or not detected
-      else if (fabs(hIntake.torque())>=1.0 && fabs(hIntake.velocity(rpm)) <= 1 && (Wall.position(deg) > 2500 || Wall.position(deg) < 1000) && doAntiJam){
+      else if (fabs(hIntake.torque())>=1.0 && fabs(hIntake.velocity(rpm)) <= 1 && (Wall.position(deg) > -20 || Wall.position(deg) < -36) && doAntiJam){
         jamcount++;
         task::sleep(10);
         if (jamcount>10){
           hIntake.spin(directionType::rev, 12, volt);
-          task::sleep(200);
+          task::sleep(100);
           hIntake.spin(fwd, 12, volt);
           
         }
-      } else if (fabs(hIntake.torque())>=1.0 && fabs(hIntake.velocity(rpm)) <= 1 && (Wall.position(deg) > -30 || Wall.position(deg) < -26) && armToLoadPos == true) {
-        jamcount++;
-        task::sleep(10);
-        if (jamcount>10){
-          hIntake.spin(directionType::rev, 0, volt);
-          task::sleep(50);
-          hIntake.spin(fwd, 12, volt);
-          
-        }
-      }
+      } 
+      // else if (doColorSort && (hIntake.torque())>=1.0 && fabs(hIntake.velocity(rpm)) <= 1 && (Wall.position(deg) > -30 || Wall.position(deg) < -26) && armToLoadPos == true) {
+      //   jamcount++;
+      //   task::sleep(10);
+      //   if (jamcount>10){
+      //     hIntake.spin(directionType::rev, 0, volt);
+      //     task::sleep(50);
+      //     hIntake.spin(fwd, 12, volt);
+      //   }
+      // }
       else { // change if (1) to else
         jamcount = 0;
         hIntake.spin(fwd, 12, volt);
@@ -103,12 +112,14 @@ int armLoop() {
       } else if(armToStartPos){
         armPID(0);
 
-      } else if(armToScore){
-        armPID(-270);
+      } else if(armToScore){ // descore
+        armPID(-165);
 
-      } else if(armToScorePos){
-        armPID(-170);
+      } else if(armToScorePos){ // Score
+        armPID(-120);
 
+      } else if(armToLow) {
+        armPID(-60);
       }
     }
     Brain.Screen.printAt(5, 180, "arm: %.2f", Wall.position(deg));
