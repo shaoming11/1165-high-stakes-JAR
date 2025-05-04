@@ -10,24 +10,18 @@ void default_constants();
 void ladyBrown(double targetDegrees);
 
 void eight_r(); // 8 ring red
-void gre_five(); // goal side, red, 5 ring + alliance, elims
-void gre_wall(); // goal side, red, 4 ring + alliance, wall stake, elims
-void gre_six(); // goal side, red, 6 ring, elims
-void grq_four(); // goal, red, qual, 4 ring + alliance
-void grush_r2();
-void grush_b();
-void gdisrupt_r();
-void gdisrupt_b();
+void eight_b();
 void five_r();
 void five_b();
-void five_r_wall();
-void five_b_wall();
+void gre_four(); //
+void gre_five(); // 1 4
+void gre_six(); // 1 5, goal side red 6 rng lliance elims
+void gbe_five();
+void grq_four(); // goal, red, qual, 4 ring + alliance
+void gbq_four();
 void awp_solo_r();
 void awp_solo_b();
-void awp_goal_r(); // goal side, red, 3 ring corner
-void awp_goal_b();
-void awp_ring_r();
-void awp_ring_b();
+
 void drive_test();
 void turn_test();
 void swing_test();

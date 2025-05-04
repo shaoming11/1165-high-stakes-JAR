@@ -119,7 +119,7 @@ int armLoop() {
         armPID(-120);
 
       } else if(armToLow) {
-        armPID(-60);
+        armPID(-200);
       }
     }
     Brain.Screen.printAt(5, 180, "arm: %.2f", Wall.position(deg));
