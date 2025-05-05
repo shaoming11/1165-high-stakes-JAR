@@ -47,17 +47,17 @@ int debugLoop(void *params) {
 }
 
 int conveyorLoop() {
-  printf("asdf");
   uint32_t now = Brain.Timer.time(msec);
   int jamcount = 0;
+  ColSort.setLight(ledState::on);
   while (true) {
     if (convDir == ConveyorDirection_e::FORWARD) 
     {
       if (ColSort.hue() > SORT_COLOUR - 20 && ColSort.hue() < SORT_COLOUR + 20 && doColorSort && ColSort.isNearObject()){ //  && 
         jamcount = 0;
-        task::sleep(100);
+        task::sleep(75);
         hIntake.spin(directionType::rev, 12, volt);
-        task::sleep(500);
+        task::sleep(300);
         hIntake.spin(fwd, 12, volt);
       }
       //red or not detected

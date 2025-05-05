@@ -11,7 +11,7 @@ void ladyBrown(double targetDegrees);
 
 void eight_r(); // 8 ring red
 void eight_b();
-void five_r();
+void five_r(); // 1 + 4 ring 
 void five_b();
 void gre_four(); //
 void gre_five(); // 1 4

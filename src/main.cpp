@@ -135,7 +135,7 @@ void pre_auton() {
     Brain.Screen.printAt(5, 100, "%f", chassis.get_absolute_heading());
     Brain.Screen.printAt(5, 160, "Vertical Position:");
     Brain.Screen.printAt(5, 180, "%f", (chassis.get_left_position_in()+chassis.get_right_position_in())/2.0);
-    Brain.Screen.printAt(5, 200, "%d", SORT_COLOUR);
+    
     Brain.Screen.printAt(5, 120, "Selected Auton:");
     switch(current_auton_selection){
       case 0:
@@ -204,7 +204,7 @@ void autonomous(void) {
   switch(current_auton_selection){ 
     case 0:
       //swing_test();
-      grq_four();
+      five_r();
       break;
     case 1:         
       drive_test();
