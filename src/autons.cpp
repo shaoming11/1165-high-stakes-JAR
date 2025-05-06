@@ -479,9 +479,7 @@ void five_r()
   chassis.turn_to_angle(-90);
   default_constants();
   chassis.turn_to_angle(185);
-  chassis.drive_distance(-5);
   Doink.set(0);
-  chassis.drive_distance(5);
   task::sleep(100);
   chassis.turn_to_angle(165);
   convDir = FORWARD;
@@ -491,36 +489,39 @@ void five_r()
   chassis.drive_distance(20);
   chassis.swing_timeout = 700;
   chassis.right_swing_to_angle(120);
-  chassis.drive_distance(15, chassis.get_absolute_heading(), 4);
+  chassis.drive_distance(11, chassis.get_absolute_heading(), 4);
   task::sleep(500);
-  chassis.drive_distance(-4);
   chassis.turn_to_angle(25);
   // chassis.drive_timeout = 1500;
   chassis.drive_min_voltage = 12;
-  chassis.drive_distance(40);
+  chassis.drive_distance(20);
+  // convDir = STOP;
+  chassis.drive_timeout = 500;
+  chassis.drive_distance(23);
   // chassis.drive_distance(27, 2.5);
   default_constants();
 
   // // chassis.drive_distance(-6);
 
   // // get corner rings
-  // doAntiJam = false;
+  doAntiJam = false;
   task::sleep(500);
   chassis.turn_timeout = 500;
   chassis.turn_to_angle(72);
+  convDir = FORWARD;
   chassis.drive_timeout = 400;
   chassis.drive_distance(18, chassis.get_absolute_heading(), 12);
   chassis.drive_timeout = 800;
   chassis.drive_distance(20, chassis.get_absolute_heading(), 4);
-  default_constants();
   // task::sleep(300);
 
   // get out
   chassis.drive_max_voltage = 4;
-  chassis.drive_distance(-10, 65);
+  chassis.drive_distance(-10, 72, 8, 6);
   task::sleep(250);
+  chassis.turn_to_angle(72);
   default_constants();
-  chassis.drive_distance(-55, 65);
+  chassis.drive_distance(-55, 72);
   armToLoadPos = true;
   armToStartPos = false;
   // chassis.turn_to_angle(75);
@@ -558,10 +559,7 @@ void five_b()
   chassis.turn_to_angle(90);
   default_constants();
   chassis.turn_to_angle(-185);
-  default_constants();
-  chassis.drive_distance(-5);
-  Doink.set(0);
-  chassis.drive_distance(5);
+  DoinkR.set(0);
   task::sleep(100);
   chassis.turn_to_angle(-165);
   convDir = FORWARD;
@@ -571,35 +569,39 @@ void five_b()
   chassis.drive_distance(20);
   chassis.swing_timeout = 700;
   chassis.left_swing_to_angle(-120);
-  chassis.drive_distance(15, chassis.get_absolute_heading(), 4);
+  chassis.drive_distance(11, chassis.get_absolute_heading(), 4);
   task::sleep(500);
-  chassis.drive_distance(-4);
   chassis.turn_to_angle(-25);
   // chassis.drive_timeout = 1500;
   chassis.drive_min_voltage = 12;
-  chassis.drive_distance(40);
+  chassis.drive_distance(20);
+  // convDir = STOP;
+  chassis.drive_timeout = 500;
+  chassis.drive_distance(23);
   // chassis.drive_distance(27, 2.5);
   default_constants();
 
   // // chassis.drive_distance(-6);
 
   // // get corner rings
-  // doAntiJam = false;
+  doAntiJam = false;
   task::sleep(500);
+  chassis.turn_timeout = 500;
   chassis.turn_to_angle(-72);
+  convDir = FORWARD;
   chassis.drive_timeout = 400;
-  chassis.drive_distance(18, chassis.get_absolute_heading(), 14);
+  chassis.drive_distance(18, chassis.get_absolute_heading(), 12);
   chassis.drive_timeout = 800;
-  chassis.drive_distance(20, chassis.get_absolute_heading(), 2);
-  default_constants();
+  chassis.drive_distance(20, chassis.get_absolute_heading(), 4);
   // task::sleep(300);
 
   // get out
   chassis.drive_max_voltage = 4;
-  chassis.drive_distance(-10, 65);
+  chassis.drive_distance(-10, -72, 8, 6);
   task::sleep(250);
+  chassis.turn_to_angle(-72);
   default_constants();
-  chassis.drive_distance(-55, 65);
+  chassis.drive_distance(-55, -72);
   armToLoadPos = true;
   armToStartPos = false;
   // chassis.turn_to_angle(75);
@@ -797,27 +799,27 @@ void grq_four()
   armToScorePos = true;
   task::sleep(400);
 
-  chassis.drive_distance(-47, 0, 6, 0, 1.5, 100, 2000, 1.2, 0, 21, 0, 0, 0, 0, 0);
-  armToScore = false;
+  chassis.drive_distance(-47, 0, 6, 0, 1.5, 100, 1300, 1.2, 0, 21, 0, 0, 0, 0, 0);
+  armToScorePos = false;
   armToStartPos = true;
   Clamp.set(1);
   task::sleep(50);
   chassis.turn_to_angle(30);
   convDir = FORWARD;
-  chassis.drive_distance(32);
-  chassis.drive_distance(-26);
+  chassis.drive_distance(36);
+  chassis.drive_distance(-29); // -28
 
-  chassis.turn_to_angle(113.5);
+  chassis.turn_to_angle(120);
   convDir = STOP;
 
   // middle rings
-  chassis.drive_distance(11);
+  chassis.drive_distance(12);
   DoinkR.set(1);
   task::sleep(100);
   chassis.drive_max_voltage = 8;
-  chassis.drive_distance(5.5);
+  chassis.drive_distance(5);
   chassis.turn_timeout = 350;
-  chassis.turn_to_angle(127);
+  chassis.turn_to_angle(130);
   chassis.turn_timeout = 2000;
   Doink.set(1);
   task::sleep(100);
@@ -829,49 +831,25 @@ void grq_four()
   Doink.set(0);
   DoinkR.set(0);
   task::sleep(250);
+  chassis.turn_to_angle(110);
 
-  chassis.turn_to_angle(112);
-  default_constants();
+  convDir = FORWARD;
+  chassis.drive_min_voltage = 10;
+  chassis.drive_distance(10); // 18
+  chassis.drive_min_voltage = 0;
+  convDir = FORWARD;
+  chassis.swing_timeout = 1000;
+  chassis.left_swing_to_angle(240);
+  convDir = FORWARD;
+  chassis.drive_max_voltage = 6;
+  chassis.drive_distance(34);
+  task::sleep(500);
 
-  // score rings
-  chassis.turn_timeout = 600;
-  chassis.drive_distance(14);
-  chassis.turn_to_angle(210);
-  chassis.drive_distance(20);
-  chassis.turn_to_angle(251);
-  chassis.drive_distance(14);
-
-  // wallstake
-  doAntiJam = false;
+  chassis.drive_distance(-30);
+  chassis.turn_to_angle(110);
+  armToLow = true;
   armToStartPos = false;
-  armToLoadPos = true;
-  chassis.turn_to_angle(203);
-  chassis.drive_distance(22);
-  convDir = STOP;
-  // chassis.drive_distance(4);
-  armToLoadPos = false;
-  armToScore = true;
-
-
-
-  // chassis.turn_to_angle(110);
-  // convDir = FORWARD;
-  // chassis.drive_min_voltage = 10;
-  // chassis.drive_distance(10); // 18
-  // chassis.drive_min_voltage = 0;
-  // convDir = STOP;
-  // chassis.swing_timeout = 1000;
-  // chassis.left_swing_to_angle(240);
-  // convDir = FORWARD;
-  // chassis.drive_max_voltage = 6;
-  // chassis.drive_distance(34);
-  // task::sleep(500);
-
-  // chassis.drive_distance(-30);
-  // armToLow = true;
-  // armToStartPos = false;
-  // chassis.turn_to_angle(110);
-  // task::sleep(500);
+  task::sleep(500);
 }
 
 void gbq_four()
@@ -883,29 +861,29 @@ void gbq_four()
   armToScorePos = true;
   task::sleep(400);
 
-  chassis.drive_distance(-47, 0, 6, 0, 1.5, 100, 2000, 1.2, 0, 21, 0, 0, 0, 0, 0);
-  armToScore = false;
+  chassis.drive_distance(-47, 0, 6, 0, 1.5, 100, 1300, 1.2, 0, 21, 0, 0, 0, 0, 0);
+  armToScorePos = false;
   armToStartPos = true;
   Clamp.set(1);
   task::sleep(50);
   chassis.turn_to_angle(-30);
   convDir = FORWARD;
-  chassis.drive_distance(32);
+  chassis.drive_distance(36);
   chassis.drive_distance(-26);
 
-  chassis.turn_to_angle(-113.5);
+  chassis.turn_to_angle(-115);
   convDir = STOP;
 
   // middle rings
-  chassis.drive_distance(14);
-  DoinkR.set(1);
+  chassis.drive_distance(12);
+  Doink.set(1);
   task::sleep(100);
   chassis.drive_max_voltage = 8;
-  chassis.drive_distance(5.5);
+  chassis.drive_distance(5);
   chassis.turn_timeout = 350;
-  chassis.turn_to_angle(127);
+  chassis.turn_to_angle(-130);
   chassis.turn_timeout = 2000;
-  Doink.set(1);
+  DoinkR.set(1);
   task::sleep(100);
   convDir = BACKWARD;
 
@@ -915,25 +893,24 @@ void gbq_four()
   Doink.set(0);
   DoinkR.set(0);
   task::sleep(250);
-  chassis.turn_to_angle(-112);
-  default_constants();
+  chassis.turn_to_angle(-110);
 
   convDir = FORWARD;
   chassis.drive_min_voltage = 10;
   chassis.drive_distance(10); // 18
   chassis.drive_min_voltage = 0;
-  convDir = STOP;
+  convDir = FORWARD;
   chassis.swing_timeout = 1000;
-  chassis.left_swing_to_angle(240);
+  chassis.right_swing_to_angle(-240);
   convDir = FORWARD;
   chassis.drive_max_voltage = 6;
   chassis.drive_distance(34);
   task::sleep(500);
 
   chassis.drive_distance(-30);
+  chassis.turn_to_angle(-110);
   armToLow = true;
   armToStartPos = false;
-  chassis.turn_to_angle(110);
   task::sleep(500);
 }
 

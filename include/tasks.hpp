@@ -1,9 +1,5 @@
 #pragma once
 
-// 210 for blue
-// 20 for red
-constexpr int SORT_COLOUR = 210;
-
 typedef enum { 
   FORWARD = 0, 
   BACKWARD, 

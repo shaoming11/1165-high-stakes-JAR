@@ -204,7 +204,7 @@ void autonomous(void) {
   switch(current_auton_selection){ 
     case 0:
       //swing_test();
-      five_r();
+      grq_four();
       break;
     case 1:         
       drive_test();
@@ -331,7 +331,8 @@ void usercontrol(void) {
       armToLoadPos           = false;
       armToStartPos          = false;
       armToScorePos          = false;
-      armToScore             = true;
+      armToScore             = false;
+      armToLow = true;
     }
 
     if (Controller.ButtonUp.pressing()) {

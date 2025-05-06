@@ -13,6 +13,10 @@ bool armToScorePos          = false;
 bool armToScore             = false;
 bool armToLow               = false;
 
+// 210 for blue
+// 20 for red
+const int SORT_COLOUR = 210;
+
 static double getWall() {
   if (Wall.position(deg) > 180) {
     return Wall.position(deg)-360;
@@ -24,7 +28,7 @@ static double getWall() {
 static void armPID(int target){
   uint32_t now = Brain.Timer.time(msec);
 
-  float kP = 0.25;
+  float kP = 0.4;
 
   int error = target - getWall();
   uint32_t startTime = Brain.Timer.time(msec);
@@ -55,7 +59,7 @@ int conveyorLoop() {
     {
       if (ColSort.hue() > SORT_COLOUR - 20 && ColSort.hue() < SORT_COLOUR + 20 && doColorSort && ColSort.isNearObject()){ //  && 
         jamcount = 0;
-        task::sleep(75);
+        task::sleep(125);
         hIntake.spin(directionType::rev, 12, volt);
         task::sleep(300);
         hIntake.spin(fwd, 12, volt);
@@ -119,7 +123,7 @@ int armLoop() {
         armPID(-120);
 
       } else if(armToLow) {
-        armPID(-200);
+        armPID(-240);
       }
     }
     Brain.Screen.printAt(5, 180, "arm: %.2f", Wall.position(deg));
